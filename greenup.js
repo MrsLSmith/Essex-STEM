@@ -1,5 +1,5 @@
 
-<<<<<<< HEAD
+
 
 
 
@@ -55,7 +55,7 @@ if (Meteor.isClient) {
         },
     });
 
-=======
+
 if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault('counter', 0);
@@ -75,7 +75,7 @@ if (Meteor.isClient) {
       Session.set('counter', Session.get('counter') + 1);
     }
   });
->>>>>>> 070459ddf72f52703d40e23f1cad7645309ad943
+
 }
 
 
@@ -85,5 +85,5 @@ if (Meteor.isServer) {
     Meteor.startup(function () {
         // code to run on server at startup
     });
-}
+}}
 
