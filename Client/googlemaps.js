@@ -8,9 +8,13 @@ var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 var lol = 0;
 window.mapDemo = window.mapDemo || {};
 
+function popupAdd() {
+    window.alert(['How many and stuff lol']);
+}
+
 // Adds a marker to the map.
 function addMarker(location) {
-
+    popupAdd();
     //markerPoses.push(location);
     var marker = new google.maps.Marker({
         position: markerPoses[lol],
@@ -37,11 +41,7 @@ function initMap() {
         center: myLatLng
     });
 
-    //var marker = new google.maps.Marker({
-    //    position: myLatLng,
-    //    map: map,
-    //    title: 'Trash Here'
-    //});
+
 }
 
 window.mapDemo.initMap = initMap;

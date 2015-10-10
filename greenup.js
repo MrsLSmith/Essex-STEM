@@ -30,6 +30,12 @@ if (Meteor.isClient) {
             window.mapDemo.centerMap({lat: Session.get("lat"), lng: Session.get("lng")});
         }
     })
+    Template.submit.events({
+        'click .location-button': function () {
+            // increment the counter when button is clicked
+
+        }
+    })
 }
 
 if (Meteor.isServer) {

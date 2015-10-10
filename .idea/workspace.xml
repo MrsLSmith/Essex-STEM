@@ -4,7 +4,6 @@
     <list default="true" id="4433abdd-f367-462f-a565-9464e7a5d494" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/greenup.html" afterPath="$PROJECT_DIR$/greenup.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/greenup.js" afterPath="$PROJECT_DIR$/greenup.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Essex-STEM.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,21 +24,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="greenup.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="greenup.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/greenup.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6770294">
+            <state vertical-scroll-proportion="-17.576923">
               <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="googlemaps.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="googlemaps.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/googlemaps.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.387097">
-              <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.44958678">
+              <caret line="16" column="11" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -48,8 +47,8 @@
       <file leaf-file-name="greenup.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/greenup.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.967742">
-              <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+            <state vertical-scroll-proportion="-8.225806">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -75,6 +74,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -93,10 +102,10 @@
         <option value="$PROJECT_DIR$/Client/googlemaps.js" />
         <option value="$PROJECT_DIR$/public/mocks.html" />
         <option value="$PROJECT_DIR$/public/mock.html" />
-        <option value="$PROJECT_DIR$/client/googlemaps.js" />
         <option value="$PROJECT_DIR$/public/mock.css" />
         <option value="$PROJECT_DIR$/greenup.js" />
         <option value="$PROJECT_DIR$/greenup.html" />
+        <option value="$PROJECT_DIR$/client/googlemaps.js" />
       </list>
     </option>
   </component>
@@ -400,22 +409,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/googlemaps.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.387097">
-          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/greenup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.967742">
-          <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/mock.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.1935484">
@@ -424,10 +417,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/greenup.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6770294">
+        <state vertical-scroll-proportion="-17.576923">
           <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/greenup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.225806">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/googlemaps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44958678">
+          <caret line="16" column="11" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
           <folding />
         </state>
       </provider>
