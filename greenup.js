@@ -1,44 +1,39 @@
-MarkerList = new Mongo.Collection("markers");
 
-MarkerList.insert({lat: 2, long: 3, bags: 3, time: new Date()});
+function getLocation() {
+    navigator.geolocation.getCurrentPosition(showPosition);
+}
 
+function showPosition(position) {
+    console.log(JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
+    Session.set({lat: position.coords.latitude, lng: position.coords.longitude});
+    console.log(JSON.stringify(Session.get('lat')));
+    MarkerList.insert({lat: position.coords.latitude, lng: position.coords.longitude, bags: 3, time: new Date()});
+}
 
-ESSEX = {};
-ESSEX.maps= {};
-ESSEX.maps.placePin = function(m){
-    console.log(m.lat);
-};
+MarkerList = new Mongo.Collection('markers');
 
 if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
-    },
-      markers : function(){
-           var myMarkers =  MarkerList.find({});
-       var newArray =   myMarkers.map(function(marker){
-              return {lat: marker.lat, lng : marker.long};
-          });
-          newArray.forEach(function(marker){
-             ESSEX.maps.placePin(marker);
-          })
+    Template.hello.helpers({
+        counter: function () {
+            return Session.get('counter');
+        }
+    });
 
-      }
-  });
+    Template.hello.events({
+        'click .location-button': function () {
+            // increment the counter when button is clicked
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
+            getLocation();
+
+            window.mapDemo.addMarker({lat: Session.get("lat"), lng: Session.get("lng")});
+            window.mapDemo.centerMap({lat: Session.get("lat"), lng: Session.get("lng")});
+        }
+    })
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-  });
+    Meteor.startup(function () {
+        // code to run on server at startup
+    });
 }
