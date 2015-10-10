@@ -2,28 +2,27 @@
  * Created by dan on 10/9/2015.
  */
 var map;
-var markerPoses = [];
+var markerPoses = [{"lat":44.4763409,"lng":-73.2083652},{"lat":45.4763409,"lng":-72.2083652},{"lat":43.4763409,"lng":-73.2083652} ];
 
 var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-var labelIndex = 0;
-
+var lol = 0;
 window.mapDemo = window.mapDemo || {};
 
 // Adds a marker to the map.
 function addMarker(location) {
 
-    markerPoses[labelIndex] = location;
+    //markerPoses.push(location);
     var marker = new google.maps.Marker({
-        position: markerPoses[labelIndex],
-        label:"ME",
-        map: map,
-
+        position: markerPoses[lol],
+        label: labels.split()[lol],
+        map: map
     });
-    LabelIndex ++;
+    console.log(markerPoses[lol]);
+    lol +=1;
 }
 function centerMap(location){
-    map.setCenter(location);
-    map.setZoom(10);
+    map.setCenter(markerPoses[lol-1]);
+    map.setZoom(6);
 }
 
 //google.maps.event.addListener(map, 'click', function(event) {
