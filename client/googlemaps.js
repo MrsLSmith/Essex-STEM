@@ -32,7 +32,7 @@ function addMarker(location) {
 }
 function listeners(){
     markers[lol].addListener('click', function(event) {
-        if( window.confirm("did ya do it")){
+        if( window.confirm("Did you pick up the trash?")){
            markers.filter(function(marker){
                return (event.latLng.J === marker.position.J) && (event.latLng.M === marker.position.M);
            }).forEach(function(marker){
@@ -58,6 +58,7 @@ function initMap() {
         zoom: 4,
         center: myLatLng
     });
+    map.setOptions({minZoom: 5, maxZoom: 15});
 }
 
 window.mapDemo.initMap = initMap;

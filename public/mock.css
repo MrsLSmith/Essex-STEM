@@ -7,14 +7,16 @@ h1 {
     color: #fff;
     font-weight: 300;
     font-size: 3.5em;
+    white-space: nowrap;
+    overflow: hidden;
 }
 header {
     max-width: 100%;
     padding: 0;
-    background-color: #ffc569;
+    background-color: #C0E0BB;
     margin: 0;
     border-bottom: solid;
-    border-color: #b38a4a;
+    border-color: #666;
     border-width: 5px;
     font-size: 1.5em;
 }
@@ -23,8 +25,8 @@ header {
     position:absolute;
     left:0;
     top:0;
-    width: 260px;
-    height: 260px;
+    width: 265px;
+    height: 264px;
 }
 
 header h1 {
@@ -35,33 +37,34 @@ header h1 {
 }
 
 #wrapper {
-    margin: 0 10%;
-    max-width: 80%;
+    margin: 0 5%;
+    max-width: 90%;
 }
 
 #map {
     margin-top: 100px;
     text-align: center;
     background-color: #a6b194;
-    padding:300px 0;
+    padding: 400px 0;
     color: #fff;
     clear: both;
+    z-index: 1;
 }
 
 .location-button {
     /*display: block;*/
-    background-color: #ec7474;
+    background-color: #B3D1FF;
     color: #fff;
     text-align: center;
-    font-size: 1.35em;
+    font-size: 1.75em;
     font-weight: 800;
     text-shadow: 2px 2px rgba(0, 0, 0, .30);
-    padding: 0 50px;
-    margin: 50px 10%;
+    padding: 0;
+    margin: 50px 25%;
     border: none;
     outline: none;
     transition: box-shadow .2s;
-    width: 30%;
+    width: 50%;
     line-height: 4em;
     float: left;
 }
@@ -71,25 +74,7 @@ header h1 {
 }
 
 .delete-button {
-    /*display: block;*/
-    background-color: #ec7474;
-    color: #fff;
-    text-align: center;
-    font-size: 1.35em;
-    font-weight: 800;
-    text-shadow: 2px 2px rgba(0, 0, 0, .30);
-    padding: 0;
-    margin: 50px 10%;
-    border: none;
-    outline: none;
-    transition: box-shadow .2s;
-    width: 30%;
-    line-height: 4em;
-    float: left;
-}
-
-.delete-button:active {
-    box-shadow: inset 6px 6px 0px 0px rgba(0,0,0,.3);
+    display: none;
 }
 
 footer {
@@ -98,4 +83,11 @@ footer {
     clear: both;
     padding-top: 50px;
     color: #373737;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    display: inline;
 }
