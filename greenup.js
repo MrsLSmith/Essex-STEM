@@ -1,89 +1,39 @@
 
+function getLocation() {
+    navigator.geolocation.getCurrentPosition(showPosition);
+}
 
+function showPosition(position) {
+    console.log(JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
+    Session.set({lat: position.coords.latitude, lng: position.coords.longitude});
+    console.log(JSON.stringify(Session.get('lat')));
+    MarkerList.insert({lat: position.coords.latitude, lng: position.coords.longitude, bags: 3, time: new Date()});
+}
 
-
-
-Markerlist = new Mongo.Collection('markers');
-Markerlist.insert(
-    {
-
-        lat: 2, long: 3, bags: 3, time: new Date()
-
-    });
-
+MarkerList = new Mongo.Collection('markers');
 
 if (Meteor.isClient) {
-    // counter starts at 0
-    Session.setDefault('counter', 0);
 
     Template.hello.helpers({
         counter: function () {
             return Session.get('counter');
-        },
-        markers: function () {
-            return Markerlist.find();
-        }
-
-
-    });
-
-    Template.hello.events({
-        'click button': function () {
-            // increment the counter when button is clicked
-            window.prompt('How many bags');
-            var numberOfBags = (Session.set('numberOfBags', 1));
         }
     });
-
-
-    Template.gone.helpers({
-        counter: function () {
-            return Session.get('counter');
-        },
-        markers: function () {
-            return Markerlist.find();
-        }
-    });
-
-    Template.gone.events({
-        'click button': function () {
-            // increment the counter when button is clicked
-
-            var trashGone = window.confirm('Is the trash really gone?');
-
-
-        },
-    });
-
-
-if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
-
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
-    },
-      markers : function (){
-
-      }
-  });
 
   Template.hello.events({
-    'click button': function () {
+    'click .location-button': function () {
       // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
 
+        getLocation();
+
+        window.mapDemo.addMarker({lat: Session.get("lat"), lng: Session.get("lng")});
+        window.mapDemo.centerMap({lat: Session.get("lat"), lng: Session.get("lng")});
+    }
+  })
 }
 
-
-
-
 if (Meteor.isServer) {
-    Meteor.startup(function () {
-        // code to run on server at startup
-    });
-}}
-
+  Meteor.startup(function () {
+    // code to run on server at startup
+  });
+}
