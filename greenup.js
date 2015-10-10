@@ -33,7 +33,12 @@ if (Meteor.isClient) {
     Template.submit.events({
         'click .location-button': function () {
             // increment the counter when button is clicked
-
+        }
+    })
+    Template.gone.event({
+        'click .delete-button': function () {
+            // delete the marker.
+            window.mapDemo.deleteMarker({lat: Session.get("lat"), lng: Session.get("lng")});
         }
     })
 }

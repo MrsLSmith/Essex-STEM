@@ -24,6 +24,10 @@ function addMarker(location) {
     console.log(markerPoses[lol]);
     lol +=1;
 }
+function deleteMarker() {
+    clearMarkers();
+    markers = [];
+}
 function centerMap(location){
     map.setCenter(markerPoses[lol-1]);
     map.setZoom(6);
@@ -47,3 +51,4 @@ function initMap() {
 window.mapDemo.initMap = initMap;
 window.mapDemo.addMarker = addMarker;
 window.mapDemo.centerMap = centerMap;
+window.mapDemo.deleteMarker = deleteMarker;
