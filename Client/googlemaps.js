@@ -12,24 +12,21 @@ function addMarker(location) {
     var marker = new google.maps.Marker({
         position: location,
         label:"ME",
-        map: map
+        map: map,
+
     });
+
+}
+function centerMap(location){
+    map.setCenter(location);
+    map.setZoom(10);
 }
 
 function initMap() {
-     var myLatLng = {lat: 1, lng: 131.044};
+     var myLatLng = {"lat":44.4763409,"lng":-73.2083652};
 
-    //var myMarkers = MapMarkerList.find();
-    //myMarkers = myMarkers.map(function(marker){
-    //    return {
-    //        lat: marker.lat,
-    //        lng: marker.lng
-    //    };
-    //})
-
-    ///var myLatLng = myMarkers[0];
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 4,
+        zoom: 2,
         center: myLatLng
     });
 
@@ -42,3 +39,4 @@ function initMap() {
 
 window.mapDemo.initMap = initMap;
 window.mapDemo.addMarker = addMarker;
+window.mapDemo.centerMap = centerMap;
