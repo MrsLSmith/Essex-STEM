@@ -1,14 +1,39 @@
+
+
+
 <head>
-  <title>greenup</title>
+    <meta charset="UTF-8">
+    <title>Green Up</title>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:300,200,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="normalize.css">
+    <link rel="stylesheet" type="text/css" href="mock.css">
 </head>
 
 <body>
-  <h1>Welcome to Greenup!</h1>
 
-  {{> hello}}
+<header>
+    <h1>User: Luke P.</h1>
+    <img src="logo.png" alt="logoGreenUp" id="logo">
+</header>
+
+
+<div id="wrapper">
+    <div id="map">
+
+    </div>
+    {{>hello}}
+</div>
+<footer>
+    <p>&copy; 2015 Essex-STEM</p>
+</footer>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjPqimo077JgItr6w-Va6r980Hr2r6Qjc&callback=window.mapDemo.initMap"></script>
 </body>
 
+
+
 <template name="hello">
+<<<<<<< HEAD
   <button>Click Me</button>
   <p>You've pressed the button {{counter}} times.</p>
     {{#each markers}}
@@ -21,3 +46,14 @@
     {{/each}}
 </template>
 
+=======
+
+    <button class="location-button"> TRASH IS HERE </button>
+
+</template>
+
+<template name="gone">
+    <button>Trash is removed</button>
+
+</template>
+>>>>>>> c196730efeca258b4cae3b0af2b2adff2df541fd
