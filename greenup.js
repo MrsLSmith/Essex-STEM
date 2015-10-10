@@ -30,10 +30,10 @@ if (Meteor.isClient) {
             window.mapDemo.centerMap({lat: Session.get("lat"), lng: Session.get("lng")});
         }
     })
-    Template.submit.events({
-        'click .location-button': function () {
-            // increment the counter when button is clicked
-
+    Template.bye.events({
+        'click .delete-button': function () {
+            var chooser = window.prompt("Which marker do you want to delete?");
+            window.mapDemo.deleteMarker(chooser);
         }
     })
 }

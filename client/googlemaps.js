@@ -6,6 +6,9 @@ var markerPoses = [{"lat":44.4763409,"lng":-73.2083652},{"lat":45.4763409,"lng":
 
 var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 var lol = 0;
+
+var markers = [];
+
 window.mapDemo = window.mapDemo || {};
 
 function popupAdd() {
@@ -18,16 +21,21 @@ function addMarker(location) {
     popupAdd();
     console.log(markerPoses[lol].lat);
     //markerPoses.push(location);
-    debugger;
     var marker = new google.maps.Marker({
         position: {"lat":markerPoses[lol].lat,"lng": markerPoses[lol].lng},
         label: markerPoses[lol].bags,
         map: map,
         title: markerPoses[lol].bags + " Bags"
     });
-    console.log(markerPoses[lol]);
+    markers.push(marker);
     lol +=1;
 }
+
+function deleteMarker(chooser) {
+    markerPoses.splice(chooser, 1);
+    markers[chooser].setMap(null);
+}
+
 function centerMap(location){
     map.setCenter(markerPoses[lol-1]);
     map.setZoom(6);
@@ -47,3 +55,4 @@ function initMap() {
 window.mapDemo.initMap = initMap;
 window.mapDemo.addMarker = addMarker;
 window.mapDemo.centerMap = centerMap;
+window.mapDemo.deleteMarker = deleteMarker;
