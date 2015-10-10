@@ -11,7 +11,7 @@ h1 {
 header {
     max-width: 100%;
     padding: 0;
-    background-color: #89BC89;
+    background-color: #C0E0BB;
     margin: 0;
     border-bottom: solid;
     border-color: #666;
@@ -50,7 +50,7 @@ header h1 {
 
 .location-button {
     /*display: block;*/
-    background-color: #92B8DE;
+    background-color: #B3D1FF;
     color: #fff;
     text-align: center;
     font-size: 1.35em;
