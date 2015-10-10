@@ -4,9 +4,9 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    console.log(JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
+    //console.log(JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
     Session.set({lat: position.coords.latitude, lng: position.coords.longitude});
-    console.log(JSON.stringify(Session.get('lat')));
+    //console.log(JSON.stringify(Session.get('lat')));
     MarkerList.insert({lat: position.coords.latitude, lng: position.coords.longitude, bags: 3, time: new Date()});
 }
 
