@@ -11,4 +11,13 @@
 <template name="hello">
   <button>Click Me</button>
   <p>You've pressed the button {{counter}} times.</p>
+    {{#each markers}}
+       <div>
+           {{lat}}
+        {{lng}}
+        {{time}}
+        {{bags}}
+       </div>
+    {{/each}}
 </template>
+
