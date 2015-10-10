@@ -1,1 +1,66 @@
-h1{color: cornflowerblue;}
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+    color: #fff;
+    font-weight: 300;
+    font-size: 2.25em;
+}
+header {
+    max-width: 100%;
+    padding: 0;
+    background-color: #ffc569;
+    margin: 0;
+    border-bottom: solid;
+    border-color: #b38a4a;
+    border-width: 5px;
+}
+
+#logo {
+    position:absolute;
+    left:0;
+    top:0;
+    width: 260px;
+    height: 260px;
+}
+
+header h1 {
+    display: inline-block;
+    margin: 30px 0 30px 50%;
+    text-shadow: 2px 2px rgba(0, 0, 0, .30);
+    /*float: right;*/
+}
+
+#wrapper {
+    margin: 50px 10% 0 10%;
+    max-width: 80%;
+}
+
+#map {
+    text-align: center;
+    background-color: #a6b194;
+    padding:200px 0;
+    color: #fff;
+}
+
+.button {
+    background-color: #ec7474;
+    color: #fff;
+    text-align: center;
+    font-size: 1.35em;
+    font-weight: 800;
+    text-shadow: 2px 2px rgba(0, 0, 0, .30);
+    margin: 10px 15% 0 15%;
+    padding: 1px 0;
+    /*box-shadow: inset 10px 10px 0px 0px rgba(0,0,0,.4);*/
+}
+
+footer {
+    font-size: 1em;
+    text-align: center;
+    clear: both;
+    padding-top: 50px;
+    color: #373737;
+}

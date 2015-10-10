@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 
 
 
@@ -54,6 +55,27 @@ if (Meteor.isClient) {
         },
     });
 
+=======
+if (Meteor.isClient) {
+  // counter starts at 0
+  Session.setDefault('counter', 0);
+
+  Template.hello.helpers({
+    counter: function () {
+      return Session.get('counter');
+    },
+      markers : function (){
+
+      }
+  });
+
+  Template.hello.events({
+    'click button': function () {
+      // increment the counter when button is clicked
+      Session.set('counter', Session.get('counter') + 1);
+    }
+  });
+>>>>>>> 070459ddf72f52703d40e23f1cad7645309ad943
 }
 
 
