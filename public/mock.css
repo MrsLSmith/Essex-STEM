@@ -7,6 +7,8 @@ h1 {
     color: #fff;
     font-weight: 300;
     font-size: 3.5em;
+    white-space: nowrap;
+    overflow: hidden;
 }
 header {
     max-width: 100%;
