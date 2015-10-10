@@ -6,9 +6,17 @@
   <h1>Welcome to Greenup!</h1>
 
   {{> hello}}
+{{>gone}}
 </body>
 
 <template name="hello">
-  <button>Click Me</button>
+  <button>Mark location</button>
   <p>You've pressed the button {{counter}} times.</p>
+
+</template>
+
+<template name="gone">
+    <button>Trash is removed</button>
+    <p>You've pressed the button {{counter}} times.</p>
+
 </template>
