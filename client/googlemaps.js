@@ -9,17 +9,21 @@ var lol = 0;
 window.mapDemo = window.mapDemo || {};
 
 function popupAdd() {
-    window.alert(['How many and stuff lol']);
+    var bags = window.prompt("How many bags of trash are there at your location?");
+    markerPoses[lol].bags = bags;
 }
 
 // Adds a marker to the map.
 function addMarker(location) {
     popupAdd();
+    console.log(markerPoses[lol].lat);
     //markerPoses.push(location);
+    debugger;
     var marker = new google.maps.Marker({
-        position: markerPoses[lol],
-        label: labels.split()[lol],
-        map: map
+        position: {"lat":markerPoses[lol].lat,"lng": markerPoses[lol].lng},
+        label: markerPoses[lol].bags,
+        map: map,
+        title: markerPoses[lol].bags + " Bags"
     });
     console.log(markerPoses[lol]);
     lol +=1;
@@ -32,10 +36,6 @@ function centerMap(location){
     map.setCenter(markerPoses[lol-1]);
     map.setZoom(6);
 }
-
-//google.maps.event.addListener(map, 'click', function(event) {
-//    addMarker(event.latLng);
-//});
 
 function initMap() {
     var myLatLng = {"lat":44.4763409,"lng":-73.2083652};
