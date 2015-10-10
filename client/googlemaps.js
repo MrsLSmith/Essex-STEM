@@ -15,7 +15,6 @@ function popupAdd() {
     var bags = window.prompt("How many bags of trash are there at your location?");
     markerPoses[lol].bags = bags;
 }
-
 // Adds a marker to the map.
 function addMarker(location) {
     popupAdd();
@@ -28,9 +27,21 @@ function addMarker(location) {
         title: markerPoses[lol].bags + " Bags"
     });
     markers.push(marker);
+    listeners();
     lol +=1;
 }
+function listeners(){
+    markers[lol].addListener('click', function(event) {
+        if( window.confirm("did ya do it")){
+           markers.filter(function(marker){
+               return (event.latLng.J === marker.position.J) && (event.latLng.M === marker.position.M);
+           }).forEach(function(marker){
+               marker.setMap(null);
+           })
 
+        }
+});
+}
 function deleteMarker(chooser) {
     markerPoses.splice(chooser, 1);
     markers[chooser].setMap(null);

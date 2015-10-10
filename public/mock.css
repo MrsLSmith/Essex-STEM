@@ -66,7 +66,7 @@ header h1 {
     float: left;
 }
 
-.location-button:hover {
+.location-button:active {
     box-shadow: inset 6px 6px 0px 0px rgba(0,0,0,.3);
 }
 
@@ -88,7 +88,7 @@ header h1 {
     float: left;
 }
 
-.delete-button:hover {
+.delete-button:active {
     box-shadow: inset 6px 6px 0px 0px rgba(0,0,0,.3);
 }
 
