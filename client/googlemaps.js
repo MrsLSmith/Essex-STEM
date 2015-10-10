@@ -58,6 +58,7 @@ function initMap() {
         zoom: 4,
         center: myLatLng
     });
+    map.setOptions({minZoom: 5, maxZoom: 15});
 }
 
 window.mapDemo.initMap = initMap;

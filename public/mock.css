@@ -23,8 +23,8 @@ header {
     position:absolute;
     left:0;
     top:0;
-    width: 260px;
-    height: 260px;
+    width: 265px;
+    height: 264px;
 }
 
 header h1 {
@@ -46,6 +46,7 @@ header h1 {
     padding:300px 0;
     color: #fff;
     clear: both;
+    z-index: 1;
 }
 
 .location-button {
@@ -98,4 +99,11 @@ footer {
     clear: both;
     padding-top: 50px;
     color: #373737;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    display: inline;
 }
