@@ -1,14 +1,34 @@
 <head>
-  <title>greenup</title>
+    <title>greenup</title>
+    <style>
+        html, body {
+            height: 75%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 75%;
+        }
+    </style>
 </head>
 
 <body>
-  <h1>Welcome to Greenup!</h1>
+<h1>Welcome to Greenup!</h1>
 
-  {{> hello}}
+<div id="map"></div>
+{{> hello}}
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjPqimo077JgItr6w-Va6r980Hr2r6Qjc&callback=window.mapDemo.initMap"></script>
 </body>
 
 <template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+    <button class="location-button">Get Location</button>
+    {{#each markers}}
+        <div>
+            {{lat}}
+            {{lng}}
+            {{time}}
+            {{bags}}
+        </div>
+    {{/each}}
 </template>
