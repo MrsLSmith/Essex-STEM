@@ -40,7 +40,6 @@ function centerMap(location){
     map.setCenter(markerPoses[lol-1]);
     map.setZoom(6);
 }
-
 function initMap() {
     var myLatLng = {"lat":44.4763409,"lng":-73.2083652};
 
@@ -48,8 +47,6 @@ function initMap() {
         zoom: 4,
         center: myLatLng
     });
-
-
 }
 
 window.mapDemo.initMap = initMap;

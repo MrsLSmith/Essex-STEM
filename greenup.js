@@ -1,4 +1,3 @@
-
 function getLocation() {
     navigator.geolocation.getCurrentPosition(showPosition);
 }
@@ -29,7 +28,7 @@ if (Meteor.isClient) {
             window.mapDemo.addMarker({lat: Session.get("lat"), lng: Session.get("lng")});
             window.mapDemo.centerMap({lat: Session.get("lat"), lng: Session.get("lng")});
         }
-    })
+    });
     Template.bye.events({
         'click .delete-button': function () {
             var chooser = window.prompt("Which marker do you want to delete?");
@@ -37,9 +36,8 @@ if (Meteor.isClient) {
         }
     })
 }
-
-if (Meteor.isServer) {
-    Meteor.startup(function () {
-        // code to run on server at startup
-    });
-}
+    if (Meteor.isServer) {
+        Meteor.startup(function () {
+            // code to run on server at startup
+        });
+    }
