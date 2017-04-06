@@ -1,8 +1,5 @@
-# Essex-STEM
-GreenUp
+# GreenUp Vermont
 =======
-2015 Vermont Hackathon Project
-------------------------------
-Essex High School STEM Academy
-------------------------------
+2015 Vermont Hackathon Project - Essex High School STEM Academy
 
+Making GreenUp easy-peasy
