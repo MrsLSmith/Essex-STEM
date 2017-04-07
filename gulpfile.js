@@ -1,4 +1,3 @@
-
 var postcss = require('gulp-postcss');
 var gulp = require('gulp');
 var autoprefixer = require('autoprefixer');
@@ -9,11 +8,11 @@ var clean = require('gulp-clean');
 var webpackStream = require('webpack-stream');
 var webpack2 = require('webpack');
 
-gulp.task('default', function() {
-  return gulp.src('src/App.js')
-  .pipe(webpackStream(require('./webpack.config.js'), webpack2))
-.pipe(gulp.dest('dist/'));
-  });
+gulp.task('webpack', function () {
+    return gulp.src('src/App.js')
+        .pipe(webpackStream(require('./webpack.config.js'), webpack2))
+        .pipe(gulp.dest('./dist/js'));
+});
 
 gulp.task('sass', function () {
     var plugins = [
@@ -27,7 +26,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('copy', function () {
-    var sourceFiles = [ './public/*'];
+    var sourceFiles = ['./public/*'];
     return gulp.src(sourceFiles)
         .pipe(gulp.dest('./dist'));
 });
@@ -38,6 +37,4 @@ gulp.task('clean', function () {
 });
 
 
-
-
-gulp.task('build', ['clean', 'sass', 'copy']);
+gulp.task('build', ['clean', 'sass', 'copy', 'webpack']);

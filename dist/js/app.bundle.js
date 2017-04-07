@@ -2703,18 +2703,12 @@ module.exports = ReactPropTypesSecret;
 
 /***/ }),
 /* 173 */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed: TypeError: Cannot call a class as a function\n    at _classCallCheck (/Users/johnneed/WebstormProjects/GreenUpVermont/node_modules/react-svg/lib/index.js:19:99)\n    at Object.ReactSVG (/Users/johnneed/WebstormProjects/GreenUpVermont/node_modules/react-svg/lib/index.js:37:5)");
-
-/***/ }),
-/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = { "default": __webpack_require__(191), __esModule: true };
 
 /***/ }),
-/* 175 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2729,7 +2723,7 @@ exports.default = function (instance, Constructor) {
 };
 
 /***/ }),
-/* 176 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2762,7 +2756,7 @@ exports.default = function () {
 }();
 
 /***/ }),
-/* 177 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2801,7 +2795,7 @@ exports.default = function (subClass, superClass) {
 };
 
 /***/ }),
-/* 178 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2822,6 +2816,12 @@ exports.default = function (self, call) {
 
   return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
 };
+
+/***/ }),
+/* 178 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "../images/logo.svg";
 
 /***/ }),
 /* 179 */,
@@ -2871,23 +2871,23 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _getPrototypeOf = __webpack_require__(174);
+var _getPrototypeOf = __webpack_require__(173);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _classCallCheck2 = __webpack_require__(175);
+var _classCallCheck2 = __webpack_require__(174);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(176);
+var _createClass2 = __webpack_require__(175);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _possibleConstructorReturn2 = __webpack_require__(178);
+var _possibleConstructorReturn2 = __webpack_require__(177);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(177);
+var _inherits2 = __webpack_require__(176);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -2895,7 +2895,7 @@ var _react = __webpack_require__(180);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _logo = __webpack_require__(173);
+var _logo = __webpack_require__(178);
 
 var _logo2 = _interopRequireDefault(_logo);
 
