@@ -5,6 +5,8 @@ var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
 var sass = require('gulp-sass');
 var copy = require('gulp-copy');
+var clean = require('gulp-clean');
+
 
 gulp.task('default', function() {
     // place code for your default task here
@@ -20,3 +22,17 @@ gulp.task('sass', function () {
         .pipe(postcss(plugins))
         .pipe(gulp.dest('./dist/css'));
 });
+
+gulp.task('copy', function () {
+    var sourceFiles = [ './public/*'];
+    return gulp.src(sourceFiles)
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('clean', function () {
+    return gulp.src('./dist', {read: false})
+        .pipe(clean());
+});
+
+
+gulp.task('sass', ['bootstrap-sass', 'site-sass']);
