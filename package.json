@@ -1,8 +1,14 @@
 {
   "name": "GreenUpVermont",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "autoprefixer": "^6.7.7",
+    "cssnano": "^3.10.0",
+    "gulp": "^3.9.1",
+    "gulp-copy": "^1.0.0",
+    "gulp-postcss": "^6.4.0",
+    "gulp-sass": "^3.1.0",
     "react-scripts": "0.9.5"
   },
   "dependencies": {
@@ -10,7 +16,7 @@
     "react-dom": "^15.4.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "firebase serve",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
