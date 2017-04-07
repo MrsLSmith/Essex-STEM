@@ -34,5 +34,9 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
+return gulp.src('src/App.js')
+  .pipe(webpack( require('./webpack.config.js') ))
+  .pipe(gulp.dest('dist/js'));
 
-gulp.task('sass', ['bootstrap-sass', 'site-sass']);
+
+gulp.task('build', ['clean', 'sass', 'copy']);
