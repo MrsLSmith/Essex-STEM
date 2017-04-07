@@ -6,11 +6,14 @@ var cssnano = require('cssnano');
 var sass = require('gulp-sass');
 var copy = require('gulp-copy');
 var clean = require('gulp-clean');
-
+var webpackStream = require('webpack-stream');
+var webpack2 = require('webpack');
 
 gulp.task('default', function() {
-    // place code for your default task here
-});
+  return gulp.src('src/App.js')
+  .pipe(webpackStream(require('./webpack.config.js'), webpack2))
+.pipe(gulp.dest('dist/'));
+  });
 
 gulp.task('sass', function () {
     var plugins = [
@@ -34,9 +37,7 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-return gulp.src('src/App.js')
-  .pipe(webpack( require('./webpack.config.js') ))
-  .pipe(gulp.dest('dist/js'));
+
 
 
 gulp.task('build', ['clean', 'sass', 'copy']);
