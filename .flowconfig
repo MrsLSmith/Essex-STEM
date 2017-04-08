@@ -1,0 +1,4 @@
+[ignore]
+.*/__tests__/.*
+.*/node_modules/flux
+.*\.ignore\.js

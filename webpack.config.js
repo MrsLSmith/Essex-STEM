@@ -2,9 +2,7 @@ var path = require('path');
 
 module.exports = {
     entry: {
-        "greenup": path.resolve(__dirname, 'src') + "/greenup.js",
-        "app": path.resolve(__dirname, 'src') + "/App.js"
-
+        "greenup": path.resolve(__dirname, 'src') + "/greenup.js"
     },
     output: {
         filename: '[name].bundle.js',
