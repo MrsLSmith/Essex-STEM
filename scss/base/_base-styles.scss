@@ -21,8 +21,8 @@ html {
 }
 
 body {
-  background-color: #FFFFF6;
-  color: $text-color;
+  background-color: $color-background;
+  color: $color-text;
   font-size: 2rem;
   padding: 0;
   margin: 0;
@@ -34,17 +34,17 @@ body {
 
 // Defines a hyperlink
 a {
-  color: $hyperlink-color;
+  color: $color-hyperlink;
   transition: color 0.5s;
   text-decoration: none;
   &:visited {
     color: black;
   }
   &:hover {
-    color: lighten($hyperlink-color, 25%);
+    color: lighten($color-hyperlink, 25%);
   }
   &:focus {
-    color: lighten($hyperlink-color, 25%);
+    color: lighten($color-hyperlink, 25%);
     text-decoration-style: dashed;
   }
 }
@@ -94,7 +94,7 @@ blockquote {
 
 // Defines a clickable button
 button {
-  .basic-button();
+  .basic-button{};
 }
 
 // Used to draw graphics, on the fly, via scripting (usually JavaScript)
@@ -226,8 +226,8 @@ hr {
 
 // Defines the root of an HTML document
 html {
-  color: $text-color;
-  background: $background-color;
+  color: $color-text;
+  background: $color-background;
   font-family: $font-family;
 }
 
@@ -244,27 +244,27 @@ iframe {
 // Defines an input control
 input {
   &[type='button'] {
-    .basic-button();
+    .basic-button{}
   }
   &[type='checkbox'] {
   }
   &[type='color'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='date'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='datetime'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='datetime-local'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='email'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='file'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='image'] {
   }
@@ -273,7 +273,7 @@ input {
   &[type='number'] {
   }
   &[type='password'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='radio'] {
   }
@@ -284,7 +284,7 @@ input {
   &[type='search'] {
     -moz-appearance: none; // override FF defaults
     -webkit-appearance: none; //override safari defaults
-    .input-box-styles();
+    .input-box-styles{}
     &::-webkit-search-decoration,
     &::-webkit-search-cancel-button,
     &::-webkit-search-results-button,
@@ -293,18 +293,18 @@ input {
     }
   }
   &[type='submit'] {
-    .basic-button();
+    .basic-button{}
   }
   &[type='tel'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='text'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='time'] {
   }
   &[type='url'] {
-    .input-box-styles();
+    .input-box-styles{}
   }
   &[type='week'] {
   }
@@ -320,7 +320,7 @@ kbd {
 
 // Defines a label for an <input> element
 label {
-  .label-styles();
+  .label-styles{}
   >span{display: block;}
 }
 
@@ -483,7 +483,7 @@ textarea {
   display:block;
   width: 100%;
   min-height: 10rem;
-  border: solid 1px $border-color;
+  border: solid 1px $color-border;
   font-size: 1.6rem;
 }
 

@@ -9,7 +9,20 @@
 </head>
 <body>
 <div id="root"></div>
+
+<script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey           : "AIzaSyD_7U3I_OgalZCHneod3MFAy7fzvzQZKWw",
+        authDomain       : "greenup-57e8e.firebaseapp.com",
+        databaseURL      : "https://greenup-57e8e.firebaseio.com",
+        projectId        : "greenup-57e8e",
+        storageBucket    : "greenup-57e8e.appspot.com",
+        messagingSenderId: "967102333139"
+    };
+    firebase.initializeApp(config);
+</script>
 <script type="text/javascript" src="js/greenup.bundle.js"></script>
-</body>
 </body>
 </html>

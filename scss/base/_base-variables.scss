@@ -1,4 +1,33 @@
-$text-color : #252525;
-$background-color : white;
+
+// Palette color codes */
+
+// As hex codes */
+
+$color-primary-0: #9AA637;	// Main Primary color */
+$color-primary-1: #E8FB4F;
+$color-primary-2: #C8D746;
+$color-primary-3: #636A27;
+$color-primary-4: #3F4418;
+
+
+// As RGBa codes */
+
+$rgba-primary-0: rgba(154,166, 55,1);	// Main Primary color */
+$rgba-primary-1: rgba(232,251, 79,1);
+$rgba-primary-2: rgba(200,215, 70,1);
+$rgba-primary-3: rgba( 99,106, 39,1);
+$rgba-primary-4: rgba( 63, 68, 24,1);
+
+// Semantic Colors
+$color-text : $color-primary-1;
+$color-background : $rgba-primary-4;
+$color-border : $rgba-primary-3;
+$color-hyperlink : blue;
+
+// Typography
 $font-family : robotoregular helvetica sans-serif ;
-$border-color : #DDD;
+
+
+//boxes
+
+$box-shadow-00 : 0 11px 14px -12px rgba(20, 20, 40, 0.5);
