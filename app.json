@@ -4,13 +4,13 @@
     "description": "Making it simple to get out and green up on Vermont's annual Green Up Day.",
     "slug": "Green Up Vermont",
     "privacy": "public",
-    "sdkVersion": "18.0.0",
+    "sdkVersion": "19.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/app.png",
     "loading": {
-      "icon": "./assets/icons/loading.gif",
+      "icon": "./assets/icons/loading.png",
       "hideExponentText": false
     },
     "packagerOpts": {
