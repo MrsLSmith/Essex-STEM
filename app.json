@@ -11,7 +11,7 @@
     ],
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/app.png",
+    "icon": "./assets/images/green-up-icon.png",
     "splash": {
       "image": "./assets/images/loading.png",
       "resizeMode": "contain",
