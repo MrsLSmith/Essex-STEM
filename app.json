@@ -2,14 +2,16 @@
   "expo": {
     "name": "GreenUpVermont",
     "description": "The Official App for Vermont's Green Up Day",
-    "slug": "Green-Up-Day-Vermont-App",
+    "slug": "Green-Up-Vermont",
     "privacy": "public",
     "sdkVersion": "25.0.0",
+    "primaryColor": "#EEEEEEE",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "0.1.0",
+    "githubUrl": "https://github.com/johnneed/GreenUpVermont",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/green-up-icon.png",
     "splash": {
@@ -18,14 +20,22 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier" : "org.greenupvermont.app"
+    },
+    "android": {
+      "package" : "org.greenupvermont.app",
+      "versionCode" : 1,
+      "permissions" : ["READ_CONTACTS", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
     },
     "androidStatusBar": {
-      "backgroundColor": "#C2185B"
+      "barStyle" : "dark-content",
+      "backgroundColor": "#EEEEEE"
     },
     "assetBundlePatterns": [
       "assets/images/*",
       "assets/fonts/*"
-    ]
+    ],
+    "isRemoteJSEnabled" : true
   }
 }
