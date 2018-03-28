@@ -35,7 +35,6 @@
     "assetBundlePatterns": [
       "assets/images/*",
       "assets/fonts/*"
-    ],
-    "isRemoteJSEnabled" : true
+    ]
   }
 }
