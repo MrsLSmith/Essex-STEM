@@ -13,7 +13,7 @@
     "githubUrl": "https://github.com/johnneed/GreenUpVermont",
     "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/green-up-icon.png",
+    "icon": "./assets/images/green-up-icon-512.png",
     "splash": {
       "image": "./assets/images/loading.png",
       "resizeMode": "contain",
@@ -42,7 +42,7 @@
           "certificateHash": "A8241216BF89A3AD919A760FC12E2517C6BB362F"
         },
         "googleMaps": {
-          "apiKey": "AIzaSyAyb5MAmGeDMvcZI3Vy_vLQ4OJ6QroOqRg"
+          "apiKey": "AIzaSyDdt_XqriettcK7RJXPjBoTYLDPdDt0Dc8"
         }
       }
     },
