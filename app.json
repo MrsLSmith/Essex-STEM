@@ -11,7 +11,7 @@
       "android"
     ],
     "githubUrl": "https://github.com/johnneed/GreenUpVermont",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/green-up-icon.png",
     "splash": {
@@ -21,15 +21,33 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier" : "org.greenupvermont.app"
+      "bundleIdentifier": "org.greenupvermont.app",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "439621369113-o7buqq3g66656fhvj4d4t6be0cubgkjg.apps.googleusercontent.com"
+        }
+      }
     },
     "android": {
-      "package" : "org.greenupvermont.app",
-      "versionCode" : 1,
-      "permissions" : ["READ_CONTACTS", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "package": "org.greenupvermont.app",
+      "versionCode": 1,
+      "permissions": [
+        "READ_CONTACTS",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyDdt_XqriettcK7RJXPjBoTYLDPdDt0Dc8",
+          "certificateHash": "A8241216BF89A3AD919A760FC12E2517C6BB362F"
+        },
+        "googleMaps": {
+          "apiKey": "AIzaSyAyb5MAmGeDMvcZI3Vy_vLQ4OJ6QroOqRg"
+        }
+      }
     },
     "androidStatusBar": {
-      "barStyle" : "dark-content",
+      "barStyle": "dark-content",
       "backgroundColor": "#EEEEEE"
     },
     "assetBundlePatterns": [
