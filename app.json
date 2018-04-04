@@ -13,7 +13,7 @@
     "githubUrl": "https://github.com/johnneed/GreenUpVermont",
     "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/green-up-icon-512.png",
+    "icon": "./assets/images/green-up-icon-1024-NO-ALPHA.png",
     "splash": {
       "image": "./assets/images/loading.png",
       "resizeMode": "contain",
@@ -24,13 +24,13 @@
       "bundleIdentifier": "org.greenupvermont.app",
       "config": {
         "googleSignIn": {
-          "reservedClientId": "439621369113-o7buqq3g66656fhvj4d4t6be0cubgkjg.apps.googleusercontent.com"
+          "reservedClientId": "com.googleusercontent.apps.439621369113-o7buqq3g66656fhvj4d4t6be0cubgkjg"
         }
       }
     },
     "android": {
       "package": "org.greenupvermont.app",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": [
         "READ_CONTACTS",
         "ACCESS_FINE_LOCATION",
@@ -38,11 +38,11 @@
       ],
       "config": {
         "googleSignIn": {
-          "apiKey": "AIzaSyDdt_XqriettcK7RJXPjBoTYLDPdDt0Dc8",
+          "apiKey": "AIzaSyBv0LTM1nQ00jjSTV0F16mFKAHPW-BmmiU",
           "certificateHash": "A8241216BF89A3AD919A760FC12E2517C6BB362F"
         },
         "googleMaps": {
-          "apiKey": "AIzaSyDdt_XqriettcK7RJXPjBoTYLDPdDt0Dc8"
+          "apiKey": "AIzaSyBv0LTM1nQ00jjSTV0F16mFKAHPW-BmmiU"
         }
       }
     },
