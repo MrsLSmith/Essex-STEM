@@ -26,6 +26,9 @@
         "googleSignIn": {
           "reservedClientId": "com.googleusercontent.apps.439621369113-o7buqq3g66656fhvj4d4t6be0cubgkjg"
         }
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We use your location to mark where you leave your trash bags"
       }
     },
     "android": {
