@@ -11,7 +11,7 @@
             "android"
         ],
         "githubUrl": "https://github.com/johnneed/GreenUpVermont",
-        "version": "1.0.2",
+        "version": "1.0.5",
         "orientation": "portrait",
         "icon": "./assets/images/green-up-icon-1024-NO-ALPHA.png",
         "splash": {
@@ -33,7 +33,7 @@
         },
         "android": {
             "package": "org.greenupvermont.app",
-            "versionCode": 2,
+            "versionCode": 3,
             "permissions": [
                 "READ_CONTACTS",
                 "ACCESS_FINE_LOCATION",
