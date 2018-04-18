@@ -1,37 +1,26 @@
-// @flow
-
-import React, {Component} from 'react';
-
-import Nav from './src/';
-
+import React from 'react';
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import reducer from './src/reducers/';
-import thunk from 'redux-thunk'
-
-// import * as firebase from 'firebase';
-//
-// // Initialize Firebase
-// const firebaseConfig = {
-//     apiKey: "AIzaSyAjwSCpOvLPgYcFr26V3gmfwJlGb-VtWAs",
-//     authDomain: "greenupvermont-de02b.firebaseapp.com",
-//     databaseURL: "https://greenupvermont-de02b.firebaseio.com",
-//     storageBucket:  "greenupvermont-de02b.appspot.com"
-// };
-//
-// firebase.initializeApp(firebaseConfig);
+import reducer from './reducers/';
+import thunk from 'redux-thunk';
+import LoadingScreen from './screens/loading-screen';
+import {firebaseConfig} from './data-sources/firebase-config.js';
+import firebase from 'firebase';
 
 
 const store = createStore(reducer, applyMiddleware(thunk));
 
-class App extends Component {
+firebase.initializeApp(firebaseConfig);
+
+export default class App extends React.Component {
+
     render() {
         return (
             <Provider store={store}>
-                <Nav/>
+                <LoadingScreen/>
             </Provider>
         );
     }
 }
 
-export default App;
+
