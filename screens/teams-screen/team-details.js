@@ -5,7 +5,7 @@
  */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Image, StyleSheet, Text, ScrollView, View, TouchableHighlight, Alert} from 'react-native';
+import {Image, StyleSheet, Text, ScrollView, View, TouchableHighlight, Alert, Share, TouchableOpacity} from 'react-native';
 import {MapView} from 'expo';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -54,7 +54,7 @@ class TeamDetails extends Component {
         this._leaveTeam = this._leaveTeam.bind(this);
         this._acceptInvitation = this._acceptInvitation.bind(this);
         this._declineInvitation = this._declineInvitation.bind(this);
-
+        this._share = this._share.bind(this);
         const {locations} = this.props;
 
         const initialMapLocation = locations && locations.length > 0 ? {
@@ -80,6 +80,22 @@ class TeamDetails extends Component {
             this.setState({hasAsked: false});
         }
     }
+
+
+_share(team){
+    return ()=> { 
+    Share.share({
+        message: `Team "${team.name}" is cleaning up Vermont on Green Up Day, May 5th 2018. \n Who: ${team.owner.displayName} \n When: ${team.date, team.start} \n Where: ${team.location} \n \n Join this team with the offical Green Up Vermont App in your app store \n\n Android: https://play.google.com/store/apps/details?id=org.greenupvermont.app \n iPhone: https://itunes.apple.com/us/app/green-up-vermont/id1364770239`,
+        title: `Join "${team.name}" on Green Up Day`
+      }, {
+        // Android only:
+        dialogTitle: 'Share this green team',
+        // iOS only:
+        subject: `Join "${team.name}" on Green Up Day`,
+        excludedActivityTypes: []
+      });
+    }
+}
 
     _declineInvitation(teamId: string, membershipId: string) {
         return () => this.props.actions.revokeInvitation(teamId, membershipId);
@@ -286,25 +302,9 @@ class TeamDetails extends Component {
             }
         };
 
-        // const otherTeamsLocationImage = require('../../assets/images/flag.png');
-
         const areas = Array.isArray(this.props.otherCleanAreas) ? this.props.otherCleanAreas : [];
 
-        // Turning this off because if an owner doesn't desginate a location these pins are confusing.
-        // const otherTeamAreas = areas.map((a, i) =>
-        //     (
-        //         <MapView.Marker
-        //             key={i + 1000}
-        //             coordinate={a.coordinates}
-        //             pinColor={'yellow'}
-        //             stopPropagation={true}>
-        //             <MultiLineMapCallout title={a.title || ''} description={a.description || ''}/>
-        //         </MapView.Marker>
-        //     )
-        // );
-
-
-        const teamAreas = (this.props.locations || []).map((marker, index) => (
+       const teamAreas = (this.props.locations || []).map((marker, index) => (
             <MapView.Marker
                 coordinate={marker.coordinates}
                 key={index}
@@ -378,7 +378,11 @@ class TeamDetails extends Component {
                         }]}>
                             {isTeamMember ? teamMemberList : null}
                         </View>
+                        <TouchableOpacity style={styles.button} onPress={this._share(selectedTeam)}>
+                            <Text style={styles.buttonText}>{'Share Team Info'}</Text>
+                        </TouchableOpacity>
                     </View>
+                
                     <View style={defaultStyles.padForIOSKeyboard}/>
                 </ScrollView>
             </View>
