@@ -6,7 +6,7 @@ import Expo from 'expo';
 import {TeamMember} from '../../models/team-member';
 import {Invitation} from '../../models/invitation';
 import * as memberStatus from '../../constants/team-member-statuses';
-import {firebaseDataLayer} from '../../data-sources/firebase-data-layer';
+import * as firebaseDataLayer from '../../data-sources/firebase-data-layer';
 import {Alert} from 'react-native';
 import * as messageTypes from '../../constants/message-types';
 import {Message} from '../../models/message';
@@ -92,8 +92,8 @@ export function saveTeam(team: Object) {
     };
 }
 
-export function createTeam(team: Object) {
-    return () => firebaseDataLayer.createTeam(team);
+export function createTeam(team: Object, user) {
+    return () => firebaseDataLayer.createTeam(team, user);
 }
 
 export function deleteTeam(teamId: string){

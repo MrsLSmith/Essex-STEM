@@ -14,7 +14,6 @@ import * as actions from './actions';
 import {StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import ThinkingGreenThoughts from './thinking-green-thoughts';
-// import GetEmail from './get-email';
 
 const styles = StyleSheet.create({
     container: {
@@ -32,6 +31,7 @@ class LoadingScreen extends Component {
     static propTypes = {
         isLoadingComplete: PropTypes.bool,
         initialAuthChecked: PropTypes.bool,
+        isInitialized: PropTypes.bool,
         isLoggingInViaSSO: PropTypes.bool,
         actions: PropTypes.object,
         skipLoadingScreen: PropTypes.bool,
@@ -45,12 +45,7 @@ class LoadingScreen extends Component {
         this._handleLoadingError = this._handleLoadingError.bind(this);
     }
 
-    componentWillMount() {
-        this.props.actions.initialize();
-    }
-
     _loadResourcesAsync = async () => Promise.all([
-        this.props.actions.initialize(),
         Asset.loadAsync([
             require('../../assets/images/circle-turquoise.png'),
             require('../../assets/images/circle-blue.png'),
@@ -70,10 +65,7 @@ class LoadingScreen extends Component {
         ]),
         Font.loadAsync({
             // This is the font that we are using for our tab bar
-            ...Ionicons.font,
-            // We include SpaceMono because we use it in HomeScreen.js. Feel free
-            // to remove this if you are not using it in your app
-            'space-mono': require('../../assets/fonts/SpaceMono-Regular.ttf')
+            ...Ionicons.font
         })
     ]);
 
@@ -86,11 +78,14 @@ class LoadingScreen extends Component {
 
     _handleFinishLoading = () => {
         this.props.actions.loadingCompleted();
+        this.props.actions.initialize();
     };
 
     render() {
+        const {isLoadingComplete, skipLoadingScreen, userIsLoggedIn, isInitialized, isLoggingInViaSSO} = this.props;
+
         switch (true) {
-            case (!this.props.isLoadingComplete && !this.props.skipLoadingScreen):
+            case (!isLoadingComplete && !skipLoadingScreen):
                 return (
                     <AppLoading
                         startAsync={this._loadResourcesAsync}
@@ -98,30 +93,19 @@ class LoadingScreen extends Component {
                         onFinish={this._handleFinishLoading}
                     />
                 );
-            case (this.props.isLoggingInViaSSO):
-                return (
-                    <ThinkingGreenThoughts/>
-                );
-            case (!this.props.initialAuthChecked):
-                return (
-                    <ThinkingGreenThoughts/>
-                );
-            case (!this.props.userIsLoggedIn) :
+            case (userIsLoggedIn === false && !isLoggingInViaSSO) :
                 return (
                     <LoginScreen/>
                 );
-
-            default :
-                // return !this.props.user.email ? (<GetEmail/>) : (
-                //     <View style={styles.container}>
-                //         {Platform.OS === 'ios' && <StatusBar barStyle='default'/>}
-                //         {Platform.OS === 'android' && <View style={styles.statusBarUnderlay}/>}
-                //         <RootNavigation/>
-                //     </View>
+            case (isInitialized):
                 return (
                     <View style={[styles.container, {padding: 0, margin: 0}]}>
                         <RootNavigation/>
                     </View>
+                );
+            default :
+                return (
+                    <ThinkingGreenThoughts/>
                 );
         }
     }
@@ -135,6 +119,7 @@ function mapStateToProps(state) {
         isLoggingInViaSSO: state.login.isLoggingInViaSSO,
         skipLoadingScreen: state.loading.skipLoadingScreen,
         userIsLoggedIn: state.login.userIsLoggedIn,
+        isInitialized: state.loading.isInitialized,
         user: state.login.user || {}
     };
 }

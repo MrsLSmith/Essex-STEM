@@ -10,6 +10,7 @@ import {
     FlatList,
     ImageBackground,
     ScrollView,
+    Share,
     StyleSheet,
     Text,
     TouchableHighlight,
@@ -30,13 +31,10 @@ import {removeNulls} from '../../libs/remove-nulls';
 
 
 const myStyles = {
-    teamIcon: {
-        height: 50, width: 50,
-        paddingRight: 10
-    },
-    messageIcon: {
-        height: 50, width: 50,
-        padding: 10
+    icon: {
+        height: 50,
+        width: 50,
+        paddingTop: 10
     },
     teamName: {
         flex: 4
@@ -62,18 +60,27 @@ class TeamItem extends Component {
                     <Text style={[styles.textDark, {fontSize: 14, paddingTop: 20, height: 40}]}>{item.name}</Text>
                 </TouchableHighlight>
                 {
-                    item.canSendMessage
+                    item.isConfirmedMember
                         ? (
-                            <TouchableOpacity style={styles.messageIcon} onPress={item.goToMessage}>
-                                <Ionicons
-                                    name={(Platform.OS === 'ios' ? 'ios-chatbubbles-outline' : 'md-chatboxes')}
-                                    size={30}
+                            <TouchableOpacity style={styles.icon} onPress={item.goToMessage}>
+                                <Ionicons style={{paddingTop: 10}}
+                                          name={(Platform.OS === 'ios' ? 'ios-chatbubbles-outline' : 'md-chatboxes')}
+                                          size={30}
                                 />
                             </TouchableOpacity>
                         )
                         : null
                 }
-                <TouchableOpacity style={styles.teamIcon} onPress={item.goToTeam}>
+                {
+                    item.isConfirmedMember ? (
+                        <TouchableOpacity style={styles.icon} onPress={item.shareTeamDetails}>
+                            <Ionicons name={Platform.OS === 'ios' ? 'ios-share-outline' : 'md-share'}
+                                      size={30} style={{paddingTop: 10}}
+                            />
+                        </TouchableOpacity>
+                    ) : null
+                }
+                <TouchableOpacity style={styles.icon} onPress={item.goToTeam}>
                     {item.toTeamIcon}
                 </TouchableOpacity>
             </View>
@@ -135,8 +142,43 @@ class MyTeams extends Component {
         return getMemberIcon((!isInvited ? status : TeamMember.memberStatuses.INVITED), {
             height: 50,
             width: 50,
-            padding: 10
+            paddingTop: 10
         });
+    };
+
+    shareTeamDetails = (team) => {
+        return () => {
+            const where = team.location ? `\nWhere : ${team.location}\n` : '';
+            const date = team.date ? `When: ${team.date}\n` : '';
+            const start = team.start ? `Start Time: ${team.start}\n` : '';
+            const end = team.end ? `End Time: ${team.end}\n` : '';
+            const owner = team.owner.displayName ? `Team Captain: ${team.owner.displayName}\n` : '';
+            const town = team.town ? `Town: ${team.town}\n` : '';
+            const notes = team.notes ? `Good to know: ${team.notes}\n` : '';
+            const message = `Join my team "${team.name}" for Green Up Day!\n \
+                ${where}${town}${date}${start}${end}${notes}${owner}`;
+            const title = `I just joined ${team.name} for Green Up Day`;
+            const url = ``; // TODO: Put in team deep link once that's implemented
+            Share.share(
+                {
+                    message: message,
+                    title: title,
+                    // iOS only
+                    url: url
+                }, {
+                    // Android Only
+                    dialogTitle: 'Share Your Green Up Team Details',
+                    // iOS only
+                    subject: title,
+                    tintColor: 'green'
+                })
+                .then((result) => {
+                    // We can record the share action here if we want
+                })
+                .catch((error) => {
+                    // Did not share
+                });
+        };
     };
 
     render() {
@@ -144,18 +186,18 @@ class MyTeams extends Component {
         const teams = this.props.teams;
         const user = this.props.currentUser;
         const membershipId = (user.email || '').toLowerCase().replace(/\./g, ':').trim();
-        const canSendMessage = (teamId) => [teamStatus.OWNER, teamStatus.ACCEPTED].indexOf(((this.props.teamMembers[teamId] || {})[membershipId] || {}).memberStatus) > -1;
+        const isConfirmedMember = (teamId) => [teamStatus.OWNER, teamStatus.ACCEPTED].indexOf(((this.props.teamMembers[teamId] || {})[membershipId] || {}).memberStatus) > -1;
         const teamKeys = Object.keys((user.teams || {}));
         const invitedKeys = (Object.keys(this.props.invitations || {})).filter(key => teamKeys.indexOf(key) === -1);
-
         const invitedTeams = invitedKeys.filter(key => Boolean(teams[key])) // avoid null exceptions if team was deleted
             .map(key => ({
                 key,
                 toTeamIcon: this.toTeamIcon(key, true),
                 ...(teams[key] || {}),
                 goToTeam: this.toTeamDetail(user.teams[key], teams[key]),
-                canSendMessage: canSendMessage(key),
-                goToMessage: () => this.props.navigation.navigate('NewMessage', {selectedTeamId: key})
+                isConfirmedMember: isConfirmedMember(key),
+                goToMessage: () => this.props.navigation.navigate('NewMessage', {selectedTeamId: key}),
+                shareTeamDetails: this.shareTeamDetails(teams[key])
             }));
 
 
@@ -165,8 +207,9 @@ class MyTeams extends Component {
                 toTeamIcon: this.toTeamIcon(key),
                 ...(teams[key] || {}),
                 goToTeam: this.toTeamDetail(user.teams[key], teams[key]),
-                canSendMessage: canSendMessage(key),
-                goToMessage: () => this.props.navigation.navigate('NewMessage', {selectedTeamId: key})
+                isConfirmedMember: isConfirmedMember(key),
+                goToMessage: () => this.props.navigation.navigate('NewMessage', {selectedTeamId: key}),
+                shareTeamDetails: this.shareTeamDetails(teams[key])
             })).concat(invitedTeams);
 
 
@@ -194,24 +237,24 @@ class MyTeams extends Component {
                 </View>
                 <View style={styles.container}>
                     {myTeams.length === 0 ? (
-                        <ImageBackground source={teamwork} style={styles.backgroundImage}>
-                            <View style={{
-                                marginTop: '20%',
-                                paddingLeft: 20,
-                                paddingRight: 20,
-                                paddingTop: 50,
-                                paddingBottom: 50,
-                                backgroundColor: 'rgba(255,255,255, 0.85)'
-                            }}>
-                                <Text style={[styles.textDark]}>
-                                    {'Green Up Day is all about community and teamwork.'}
-                                </Text>
-                                <Text style={[styles.textDark]}>
-                                    {'Search for teams in your area, or create a new one and invite some friends.'}
-                                </Text>
-                            </View>
-                        </ImageBackground>
-                    )
+                            <ImageBackground source={teamwork} style={styles.backgroundImage}>
+                                <View style={{
+                                    marginTop: '20%',
+                                    paddingLeft: 20,
+                                    paddingRight: 20,
+                                    paddingTop: 50,
+                                    paddingBottom: 50,
+                                    backgroundColor: 'rgba(255,255,255, 0.85)'
+                                }}>
+                                    <Text style={[styles.textDark]}>
+                                        {'Green Up Day is all about community and teamwork.'}
+                                    </Text>
+                                    <Text style={[styles.textDark]}>
+                                        {'Search for teams in your area, or create a new one and invite some friends.'}
+                                    </Text>
+                                </View>
+                            </ImageBackground>
+                        )
                         : (
                             <ScrollView style={styles.scroll}>
                                 <View style={styles.infoBlockContainer}>
