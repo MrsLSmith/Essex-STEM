@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Green Up Vermont",
+    "name": "Green Up Vermont 2019",
     "description": "The Official App for Vermont's Green Up Day",
     "slug": "Green-Up-Vermont",
     "privacy": "public",
@@ -9,6 +9,7 @@
       "ios",
       "android"
     ],
+    "githubUrl": "https://github.com/codeforbtv/green-up-app",
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/green-up-icon-1024-NO-ALPHA.png",
@@ -47,6 +48,7 @@
         "googleSignIn": {
           "apiKey": "AIzaSyBv0LTM1nQ00jjSTV0F16mFKAHPW-BmmiU",
           "certificateHash": "A8241216BF89A3AD919A760FC12E2517C6BB362F"
+
         },
         "googleMaps": {
           "apiKey": "AIzaSyBv0LTM1nQ00jjSTV0F16mFKAHPW-BmmiU"
