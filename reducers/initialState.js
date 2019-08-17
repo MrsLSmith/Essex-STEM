@@ -1,11 +1,16 @@
+// @flow
 export default {
     about: {},
     loading: {
-        isLoadingComplete: false,
         initialAuthChecked: false,
         isInitialized: false,
         loadingError: null,
-        skipLoadingScreen: false
+        skipLoadingScreen: false,
+        setupMessagesListener: false,
+        setupTeamsListener: false,
+        setupMyTeamsListeners: false,
+        setupProfileListener: false,
+        setupInvitationsListener:false
     },
     login: {
         userIsLoggedIn: null,
@@ -22,9 +27,11 @@ export default {
         invitationsLoaded: false,
         teamsLoaded: false
     },
+    teamMembers: {},
     teamMembersLoaded: false,
+    teamRequests: {},
     teams: { teams: {}, teamMembers: {}, contact: [], selectedTeam: null, locations: [] },
-    trashBagFinder: { townData: {} },
+    towns: { townData: {} },
     trashTracker: {
         trashDrops: [],
         location: null,

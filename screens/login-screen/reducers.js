@@ -1,5 +1,5 @@
-import * as types from '../../constants/actionTypes';
-import initialState from '../../reducers/initialState';
+import * as types from "../../constants/action-types";
+import initialState from "../../reducers/initialState";
 
 export function reducers(state = initialState.login, action) {
     switch (action.type) {
@@ -19,12 +19,21 @@ export function reducers(state = initialState.login, action) {
                 user: null,
                 createUserError: null,
                 userIsLoggedIn: false,
+                isLoggingInViaSSO: false,
                 initialAuthChecked: true,
                 loginError: action.error,
                 creatingUser: false
             };
         case types.LOGOUT_SUCCESSFUL:
-            return initialState.login;
+            return {
+                ...state,
+                user: null,
+                createUserError: null,
+                userIsLoggedIn: false,
+                initialAuthChecked: true,
+                loginError: null,
+                creatingUser: false
+            };
         case types.CREATING_USER:
             return {
                 ...state,
@@ -36,17 +45,21 @@ export function reducers(state = initialState.login, action) {
                 ...state,
                 createUserError: action.error
             };
-        case types.LOGOUT_FAIL:
-            return initialState.login;
+        case types.RESET:
+            return { ...state,
+                user: null,
+                createUserError: null,
+                userIsLoggedIn: false,
+                initialAuthChecked: true,
+                isLoggingInViaSSO: false,
+                loginError: null,
+                creatingUser: false };
         case types.IS_LOGGING_IN_VIA_SSO:
             return {
-                ...state, initialAuthChecked: true,
+                ...state,
+                initialAuthChecked: true,
                 createUserError: null,
                 isLoggingInViaSSO: action.isLoggingInViaSSO
-            };
-        case types.CREATE_USER_FAIL :
-            return {
-                ...state, createUserError: action.error
             };
         default:
             return state;

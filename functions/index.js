@@ -1,40 +1,47 @@
+/**
+ *  A SendGrid API key must be set using the firestore cli in the terminal by running:
+ *
+ *        firebase functions:config:set sendgrid.apikey="my-api-key"
+ *
+ *  Afterwards deploy your functions for the change to take effect by running
+ *
+ *       firebase deploy --only functions
+ */
+
+const api = require('./api');
+
 const functions = require('firebase-functions');
+
 const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
+
 const sgMail = require('@sendgrid/mail');
-const nodemailer = require('nodemailer');
-// Configure the email transport using the default SMTP transport and a GMail account.
-// For Gmail, enable these:
-// 1. https://www.google.com/settings/security/lesssecureapps
-// 2. https://accounts.google.com/DisplayUnlockCaptcha
-// For other types of transports such as Sendgrid see https://nodemailer.com/transports/
-// TODO: Configure the `gmail.email` and `gmail.password` Google Cloud environment variables.
-const gmailEmail = functions.config().gmail.email;
-const gmailPassword = functions.config().gmail.password;
-const mailTransport = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: gmailEmail,
-        pass: gmailPassword
-    }
-});
-const SENDGRID_API_KEY = functions.config().sendgrid.apikey;
+
 // Your company name to include in the emails
 // TODO: Change this to your app or company name to customize the email sent.
 const APP_NAME = 'Green Up Vermont';
 
-function sendInvitationEmailSendGrid(invitation) {
-    sgMail.setApiKey(SENDGRID_API_KEY);
+const removeFromProfile = (uid, teamId) => {
+    return functions.firestore.document(`profiles/${uid}/teams/${teamId}`).delete();
+};
+
+const removeInvitation = (membershipKey, teamId) => {
+    return functions.firestore.document(`invitations/${membershipKey}/${teamId}`).delete();
+};
+
+function sendInvitationEmailSendGrid(apiKey, invitation, email, teamId) {
+    sgMail.setApiKey(apiKey);
     sgMail.setSubstitutionWrappers('{{', '}}'); // Configure the substitution tag wrappers globally
 
     const teamMember = invitation.teamMember;
     const team = invitation.team || {};
-    const to = teamMember.email.trim().toLowerCase();
+    const to = email;
     const toName = teamMember.displayName;
     const subject = 'You have been invited to Green Up Day';
     const sender = invitation.sender.displayName;
-    const from = 'app@greenupvermont.org';
-
+    const from = {
+        name: 'Green Up Vermont',
+        email: 'app@greenupvermont.org',
+    };
     // Build Text Body
     const noNameText = 'A friend has invited you to participate in Green Up Day';
     const withNameText = `Hey ${invitation.displayName || ''}! ${sender} has invited you to participate in Green Up Day.`;
@@ -50,7 +57,7 @@ function sendInvitationEmailSendGrid(invitation) {
     const owner = team.owner.displayName ? `<p>Team Captain : <strong>${team.owner.displayName}</strong>` : '';
     const town = team.town ? `<p>Town : <strong>${team.town}</strong></p>` : '';
     const notes = team.notes ? `<p>Description : <strong>${team.notes}</strong></p>` : '';
-    const teaminfo = `${teamName}${owner}${date}${start}${end}${town}${where}${notes}`;
+    const teamInfo = `${teamName}${owner}${date}${start}${end}${town}${where}${notes}`;
     const message = {
         to,
         from,
@@ -58,76 +65,75 @@ function sendInvitationEmailSendGrid(invitation) {
         text,
         html,
         templateId: '93b4cee5-a954-4704-ae0b-965196dc05b1',
-        substitutions: {teaminfo}
+        substitutions: {teaminfo: teamInfo}
     };
 
     return sgMail.send(message);
-
 }
 
-
-// Sends a welcome email to the given user.
-function sendInvitationEmailGmail(to, fromEmail, fromName, subject, text) {
-    const mailOptions = {
-        from: `${fromName} <${fromEmail}>`,
-        to,
-        subject,
-        text
-    };
-    return mailTransport.sendMail(mailOptions);
-}
 
 /**
  * User setup after an invitation create
  * Sends a invitation email to an invited user.
  */
-exports.onInvitationCreate = functions.database.ref('invitations/{pushId}/{invitationId}').onCreate((event) => {
-    const invitation = event.data.val();
-    return sendInvitationEmailSendGrid(invitation);
-});
 
-exports.onTeamDelete = functions.database.ref('teamMembers/{pushId}').onDelete((event) => {
-    const db = admin.database();
-    const removeFromProfile = (uid, teamId) => db.ref(`profiles/${uid}/teams/${teamId}`).remove();
-    const removeInvitation = (membershipKey, teamId) => db.ref(`invitations/${membershipKey}/${teamId}`).remove();
-
-    const memberships = event.data.previous;
-    if (memberships.exists()) {
-        Object.keys(memberships.val()).forEach(key => {
-            const uid = memberships[key].uid;
-
-            if (Boolean(uid)) {
-                removeFromProfile(uid, event.params.pushId);
-            }
-            return removeInvitation(key, event.params.pushId);
-        });
-    }
-    return Promise.reject(new Error('no team memberships to remove'));
-});
-
-
-exports.onTeamMemberRemove = functions.database.ref('teamMembers/{teamId}/{membershipId}').onDelete((event) => {
-    const db = admin.database();
-    const removeFromProfile = (uid, teamId) => db.ref(`profiles/${uid}/teams/${teamId}`).remove();
-    const removeInvitation = (membershipKey, teamId) => db.ref(`invitations/${membershipKey}/${teamId}`).remove();
-    const removeTeamMessages = (uid, teamId) => db.ref(`messages/${uid}`).once('value').then(snapshot => {
-        const data = snapshot.val();
-        const keys = Object.keys(data).filter(key => !!data[key].teamId && data[key].teamId === teamId);
-        return keys.map(key => db.ref(`messages/${uid}/${key}`).remove());
+exports.onInvitationCreate = functions.firestore.document('invitations/{email}/teams/{teamId}').onCreate(
+    (snap, context) => {
+        const invitation = snap.data();
+        const email = context.params.email;
+        const teamId = context.params.teamId;
+        const apiKey = functions.config().sendgrid.apikey;
+        return sendInvitationEmailSendGrid(apiKey, invitation, email, teamId);
     });
-    const member = event.data.previous;
-    if (member.exists()) {
-        const uid = (member.val() || {}).uid;
-        if (Boolean(uid)) {
-            removeFromProfile(uid, event.params.teamId);
-            removeTeamMessages(uid, event.params.teamId);
-        }
-        return removeInvitation(event.params.membershipId, event.params.teamId); // TODO : return all promises
-    }
-    return Promise.reject(new Error('no team member to remove'));
-});
+
+exports.onTeamDelete = functions.firestore.document('teams/{teamId}').onDelete((snap, context) => {
+    const db = admin.firestore();
+    const members = db.collection(`teams/${context.params.teamId}/members`);
+    const requests = db.collection(`teams/${context.params.teamId}/requests`);
+    const invitations = db.collection(`teams/${context.params.teamId}/invitations`);
+    const messages = db.collection(`teams/${context.params.teamId}/messages`);
+
+    const xMembers = members.get().then(querySnapshot => {
+        let data = [];
+        querySnapshot.forEach(doc => data.push(doc.delete()));
+        return data;
+    });
+
+    const xRequests = requests.get().then(querySnapshot => {
+        let data = [];
+        querySnapshot.forEach(doc => data.push(doc.delete()));
+        return data;
+    });
+
+    const xInvitations = invitations.get().then(querySnapshot => {
+        let data = [];
+        querySnapshot.forEach(doc => data.push(doc.delete()));
+        return data;
+    });
+
+    const xMessages = messages.get().then(querySnapshot => {
+        let data = [];
+        querySnapshot.forEach(doc => data.push(doc.delete()));
+        return data;
+    });
 
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    response.send('Hello from Firebase!');
+    const allXs = [].concat(xMembers, xInvitations, xRequests, xMessages);
+    return Promise.all(allXs);
 });
+
+exports.onTeamMemberRemove = functions.firestore.document('teams/{teamId}/members/{uid}').onDelete((snap, context) => {
+    return removeFromProfile(context.params.uid, context.params.teamId);
+});
+
+exports.onTeamRequestRemove = functions.firestore.document('teams/{teamId}/requests/{uid}').onDelete((snap, context) => {
+    return removeFromProfile(context.params.uid, context.params.teamId);
+});
+
+exports.onTeamInvitationRemove = functions.firestore.document('teams/{teamId}/invitations/{email}').onDelete((snap, context) => {
+    return removeInvitation(context.params.email, context.params.teamId);
+});
+
+exports.api = api.app;
+
+admin.initializeApp(functions.config().firebase);

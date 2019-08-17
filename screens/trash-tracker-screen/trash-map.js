@@ -1,15 +1,9 @@
-/**
- /**
- * GreenUpVermont React Native App
- * https://github.com/johnneed/GreenUpVermont
- * @flow
- */
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {IntentLauncherAndroid, Location, MapView, Permissions} from 'expo';
-import CheckBox from 'react-native-checkbox';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+// @flow
+import React, { Component } from "react";
+import { IntentLauncherAndroid, Location, MapView, Permissions } from "expo";
+import CheckBox from "react-native-checkbox";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import {
     KeyboardAvoidingView,
     Linking,
@@ -22,87 +16,41 @@ import {
     Text,
     View,
     Platform
-} from 'react-native';
-import TrashToggles from './trash-toggles';
-import * as turf from '@turf/helpers';
-import booleanWithin from '@turf/boolean-within';
-import TrashDrop from '../../models/trash-drop';
-import * as actions from './actions';
-import {defaultStyles} from '../../styles/default-styles';
-import MultiLineMapCallout from '../../components/MultiLineMapCallout';
-import {Ionicons} from '@expo/vector-icons';
+} from "react-native";
+import TrashToggles from "./trash-toggles";
+import * as turf from "@turf/helpers";
+import booleanWithin from "@turf/boolean-within";
+import TrashDrop from "../../models/trash-drop";
+import * as actions from "./actions";
+import { defaultStyles } from "../../styles/default-styles";
+import MultiLineMapCallout from "../../components/multi-line-map-callout";
+import { Ionicons } from "@expo/vector-icons";
+import TownInformation from "../../components/town-information";
+import offsetLocations from "../../libs/offset-locations";
 
-const myStyles = {};
+const styles = StyleSheet.create(defaultStyles);
 
-const combinedStyles = Object.assign({}, defaultStyles, myStyles);
-const styles = StyleSheet.create(combinedStyles);
-
-class TownInformation extends React.Component {
-    static propTypes = {
-        townInfo: PropTypes.object,
-        town: PropTypes.string
-    };
-
-    render() {
-        const {townInfo, town} = this.props;
-        return (
-            <View style={{
-                padding: 5,
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                height: 60,
-                width: '100%',
-                backgroundColor: 'rgba(255,255,255, 0.8)'
-            }}>
-                {typeof townInfo.roadsideDropoffAllowed === 'undefined' && (
-                    <Text style={styles.statusBarText}>
-                        {'Sorry, we have no information on trash drops for your location. '}
-                    </Text>
-                )}
-                {townInfo.roadsideDropoffAllowed === true && (
-                    <Text style={styles.statusBarText}>
-                        <Text>{`You are in ${town} and leaving trash bags on the roadside is allowed.`}</Text>
-                    </Text>
-                )}
-                {townInfo.roadsideDropoffAllowed === false && (
-                    <View style={styles.statusBarText}>
-                        <Text>{`You are in ${town} and leaving trash bags on the roadside is`}
-                            <Text style={{fontWeight: 'bold'}}>
-                                {' not'}
-                            </Text>
-                            <Text>
-                            {' allowed. Please take your trash to a designated drop off.'}
-                            </Text>
-                        </Text>
-                        {townInfo.dropoffLocations.map((d, i) => (
-                            <Text key={i}>{`\n${d.dropoffLocationName}, ${d.dropoffLocationAddress}`}</Text>
-                        ))}
-                    </View>)}
-            </View>
-        );
-    }
+type Props = {
+    navigation: Object,
+    actions: Object,
+    drops: Array<Object>,
+    currentUser: Object,
+    townData: Object,
+    location: Object,
+    supplyPickupToggle: Boolean,
+    uncollectedTrashToggle: Boolean,
+    trashDropOffToggle: Boolean,
+    myTrashToggle: Boolean,
+    collectedTrashToggle: Boolean,
+    cleanAreas: Array<Object>,
+    cleanAreasToggle: Boolean
 }
 
-class TrashMap extends Component {
-    static propTypes = {
-        navigation: PropTypes.object,
-        actions: PropTypes.object,
-        drops: PropTypes.array,
-        currentUser: PropTypes.object,
-        townData: PropTypes.object,
-        location: PropTypes.object,
-        supplyPickupToggle: PropTypes.bool,
-        uncollectedTrashToggle: PropTypes.bool,
-        trashDropoffToggle: PropTypes.bool,
-        myTrashToggle: PropTypes.bool,
-        collectedTrashToggle: PropTypes.bool,
-        cleanAreas: PropTypes.array,
-        cleanAreasToggle: PropTypes.bool
-    };
+
+class TrashMap extends Component<Props> {
 
     static navigationOptions = {
-        title: 'Trash Tracker'
+        title: "Trash Tracker"
     };
 
     constructor(props) {
@@ -119,7 +67,7 @@ class TrashMap extends Component {
                 tags: [],
                 bagCount: 1,
                 wasCollected: false,
-                createdBy: {uid: props.currentUser.uid, email: props.currentUser.email}
+                createdBy: { uid: props.currentUser.uid, email: props.currentUser.email }
             },
             modalVisible: false,
             toggleModalVisible: false,
@@ -131,8 +79,8 @@ class TrashMap extends Component {
     componentWillMount() {
         // Hack to work around known issue where the my location button doesn't show
         // https://github.com/react-community/react-native-maps/issues/1332
-        setTimeout(() => this.setState({hackyHeight: 301}), 500);
-        setTimeout(() => this.setState({hackyHeight: 300}), 1000);
+        setTimeout(() => this.setState({ hackyHeight: 301 }), 500);
+        setTimeout(() => this.setState({ hackyHeight: 300 }), 1000);
 
     }
 
@@ -143,43 +91,42 @@ class TrashMap extends Component {
     }
 
     _getTown(location) {
-        const townPolygonsData = require('../../libs/VT_Boundaries__town_polygons.json');
+        const townPolygonsData = require("../../libs/VT_Boundaries__town_polygons.json");
         const currentLocation = turf.point([location.coords.longitude, location.coords.latitude]);
         const town = townPolygonsData.features.find((f) => {
             const feature = turf.feature(f.geometry);
             return booleanWithin(currentLocation, feature);
         });
-
-        return town ? town.properties.TOWNNAMEMC : '';
+        return town ? town.properties.TOWNNAMEMC : "";
     }
 
     _getLocationAsync = async () => {
         // TODO: what if the user doesn't grant permission to location
-        const {status} = await Permissions.askAsync(Permissions.LOCATION);
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-        if (status === 'granted') {
+        if (status === "granted") {
             const locationProviderStatus = await Location.getProviderStatusAsync();
-            if(locationProviderStatus.locationServicesEnabled === false) {
-                this.setState({errorMessage: 'Access to the device location is required. Please make sure you have location services on and you grant access when requested.'});
+            if (locationProviderStatus.locationServicesEnabled === false) {
+                this.setState({ errorMessage: "Access to the device location is required. Please make sure you have location services on and you grant access when requested." });
             } else {
                 const location = await Location.getCurrentPositionAsync({});
                 this.props.actions.locationUpdated(location);
 
-                Location.watchPositionAsync({timeInterval: 3000, distanceInterval: 20}, (l) => {
-                    this.setState({errorMessage: null});
+                Location.watchPositionAsync({ timeInterval: 3000, distanceInterval: 20 }, (l) => {
+                    this.setState({ errorMessage: null });
                     this.props.actions.locationUpdated(l);
                 });
             }
         } else {
-            this.setState({errorMessage: 'Access to the device location is required. Please make sure you have location services on and you grant access when requested.'});
+            this.setState({ errorMessage: "Access to the device location is required. Please make sure you have location services on and you grant access when requested." });
         }
     };
 
     _toggleTag = (editable, tag) => () => {
-        if(editable) {
+        if (editable) {
             const hasTag = this.state.drop.tags.indexOf(tag) > -1;
             const tags = hasTag ? this.state.drop.tags.filter(_tag => _tag !== tag) : this.state.drop.tags.concat(tag);
-            this.setState({drop: {...this.state.drop, tags}});
+            this.setState({ drop: { ...this.state.drop, tags } });
         }
     };
 
@@ -192,11 +139,10 @@ class TrashMap extends Component {
                 tags: [],
                 bagCount: 1,
                 wasCollected: false,
-                createdBy: {uid: this.props.currentUser.uid, email: this.props.currentUser.email}
+                createdBy: { uid: this.props.currentUser.uid, email: this.props.currentUser.email }
             }
         });
     }
-
 
     closeToggleModal() {
         this.setState({
@@ -205,11 +151,26 @@ class TrashMap extends Component {
     }
 
     render() {
+        const {
+            actions, // eslint-disable-line no-shadow
+            currentUser,
+            location,
+            drops,
+            townData,
+            cleanAreas,
+            collectedTrashToggle,
+            myTrashToggle,
+            uncollectedTrashToggle,
+            trashDropOffToggle,
+            supplyPickupToggle,
+            cleanAreasToggle
+        } = this.props;
+
         const saveTrashDrop = () => {
-            if (this.state.drop.uid) {
-                this.props.actions.updateTrashDrop(this.state.drop);
+            if (this.state.drop.id) {
+                actions.updateTrashDrop(this.state.drop);
             } else {
-                this.props.actions.dropTrash(TrashDrop.create(Object.assign({}, this.state.drop, {location: this.props.location.coords})));
+                actions.dropTrash(TrashDrop.create(Object.assign({}, this.state.drop, { location: location.coords })));
             }
 
             this.closeModal();
@@ -221,131 +182,142 @@ class TrashMap extends Component {
                     drop: Object.assign({}, this.state.drop, {
                         wasCollected: true,
                         collectedBy: {
-                            uid: this.props.currentUser.uid,
-                            email: this.props.currentUser.email
+                            uid: currentUser.uid,
+                            email: currentUser.email
                         }
                     })
                 }, saveTrashDrop);
         };
 
         const goToTrashDrop = () => {
-            this.setState({modalVisible: true});
+            this.setState({ modalVisible: true });
         };
-
-        const {drops, townData, cleanAreas} = this.props;
 
         // by convention, we're importing town names as upper case, any characters different
         // than uppercase letters replaced with underscore
-        const town = this.props.location ? this._getTown(this.props.location) : '';
-        const encodedTownName = town.toUpperCase().replace(/[^A-Z]/g, '_');
+        const town = location ? this._getTown(location) : "";
+        const encodedTownName = town.toUpperCase().replace(/[^A-Z]/g, "_");
         const townInfo = townData[encodedTownName] || {};
-        const trashDropoffLocations = Object.getOwnPropertyNames(townData).reduce((acc, p) => acc.concat(townData[p].dropoffLocations), []).filter(l => l.dropoffLocationCoordinates);
-        const supplyPickupLocations = Object.getOwnPropertyNames(townData).reduce((acc, p) => acc.concat(townData[p].pickupLocations), []).filter(l => l.pickupLocationCoordinates);
-        const initialMapLocation = this.props.location ? {
-            latitude: Number(this.props.location.coords.latitude),
-            longitude: Number(this.props.location.coords.longitude),
+        const trashDropOffLocations = Object.values(townData).map(t => t.dropOffLocations)
+            .reduce((a, b) => ([...a, ...b]))
+            .filter(loc => loc.coordinates && loc.coordinates.latitude && loc.coordinates.longitude);
+        const supplyPickupLocations = Object.values(townData).map(t => t.pickupLocations)
+            .reduce((a, b) => ([...a, ...b]))
+            .filter(loc => loc.coordinates && loc.coordinates.latitude && loc.coordinates.longitude);
+        const initialMapLocation = location ? {
+            latitude: Number(location.coords.latitude),
+            longitude: Number(location.coords.longitude),
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
         } : null;
 
-        const showFirstButton = !this.state.drop.wasCollected && this.state.drop.createdBy && this.state.drop.createdBy.uid === this.props.currentUser.uid;
+        const showFirstButton = !this.state.drop.wasCollected && this.state.drop.createdBy && this.state.drop.createdBy.uid === currentUser.uid;
 
-        const collectedTrash = (this.props.collectedTrashToggle && drops || []).filter(drop => drop.wasCollected === true).map(drop => (
+        const collectedTrash = (collectedTrashToggle ? drops : []).filter(drop => drop.wasCollected === true).map(drop => (
             <MapView.Marker
-                key={drop.uid}
+                key={ drop.id }
                 // image={collectedTrashIcon}
-                pinColor={'turquoise'}
-                coordinate={drop.location}
-                title={`${drop.bagCount} bag(s)${drop.tags.length > 0 ? ' & other trash' : ''}`}
-                description={'Tap to view collected trash'}
-                onCalloutPress={() => {
-                    this.setState({modalVisible: true, drop: drop});
-                }}
-                stopPropagation={true}/>
+                pinColor={ "turquoise" }
+                coordinate={ drop.location }
+                title={ `${drop.bagCount} bag(s)${drop.tags.length > 0 ? " & other trash" : ""}` }
+                description={ "Tap to view collected trash" }
+                onCalloutPress={ () => {
+                    this.setState({ modalVisible: true, drop: drop });
+                } }
+                stopPropagation={ true }/>
         ));
 
-        const myTrash = (drops || []).filter(drop => (this.props.myTrashToggle && !drop.wasCollected && drop.createdBy && drop.createdBy.uid === this.props.currentUser.uid)).map(drop => (
+        const myTrash = (drops || []).filter(drop => (myTrashToggle && !drop.wasCollected && drop.createdBy && drop.createdBy.uid === currentUser.uid)).map(drop => (
             <MapView.Marker
-                key={drop.uid}
+                key={ drop.id }
                 // image={myUncollectedTrashIcon}
-                pinColor={'yellow'}
-                coordinate={drop.location}
-                title={`${drop.bagCount} bag(s)${drop.tags.length > 0 ? ' & other trash' : ''}`}
-                description={'Tap to view, edit or collect'}
-                onCalloutPress={() => {
-                    this.setState({modalVisible: true, drop: drop});
-                }}
-                stopPropagation={true}
+                pinColor={ "yellow" }
+                coordinate={ drop.location }
+                title={ `${drop.bagCount} bag(s)${drop.tags.length > 0 ? " & other trash" : ""}` }
+                description={ "Tap to view, edit or collect" }
+                onCalloutPress={ () => {
+                    this.setState({ modalVisible: true, drop: drop });
+                } }
+                stopPropagation={ true }
             />
         ));
 
-        const unCollectedTrash = (this.props.uncollectedTrashToggle && drops || []).filter(drop => (!drop.wasCollected && drop.createdBy && drop.createdBy.uid !== this.props.currentUser.uid)).map(drop => (
-            <MapView.Marker
-                key={drop.uid}
-                // image={uncollectedTrashIcon}
-                pinColor={'red'}
-                coordinate={drop.location}
-                title={`${drop.bagCount} bag(s)${drop.tags.length > 0 ? ' & other trash' : ''}`}
-                description={'Tap to view or collect'}
-                onCalloutPress={() => {
-                    this.setState({modalVisible: true, drop: drop});
-                }}
-                stopPropagation={true}
-            />
-        ));
-
-        const dropoffLocations = (this.props.trashDropoffToggle && trashDropoffLocations || []).map((d, i) => (
-            <MapView.Marker
-                key={`${town}DropoffLocation${i}`}
-                // image={trashDropoffLocationIcon}
-                pinColor={'blue'}
-                coordinate={d.dropoffLocationCoordinates}
-                stopPropagation={true}>
-                <MultiLineMapCallout
-                    title='Drop Off Location'
-                    description={`${d.dropoffLocationName}, ${d.dropoffLocationAddress}`}
+        const unCollectedTrash = (uncollectedTrashToggle ? drops : [])
+            .filter(drop => (!drop.wasCollected && drop.createdBy && drop.createdBy.uid !== currentUser.uid))
+            .map(drop => (
+                <MapView.Marker
+                    key={ drop.id }
+                    // image={uncollectedTrashIcon}
+                    pinColor={ "red" }
+                    coordinate={ drop.location }
+                    title={ `${drop.bagCount} bag(s)${drop.tags.length > 0 ? " & other trash" : ""}` }
+                    description={ "Tap to view or collect" }
+                    onCalloutPress={ () => {
+                        this.setState({ modalVisible: true, drop: drop });
+                    } }
+                    stopPropagation={ true }
                 />
-            </MapView.Marker>
-        ));
+            ));
 
-        const pickupLocations = (this.props.supplyPickupToggle && supplyPickupLocations || []).map((d, i) => (
-            <MapView.Marker
-                key={`supplyPickup${i}`}
-                // image={supplyPickupLocationIcon}
-                pinColor={'green'}
-                coordinate={d.pickupLocationCoordinates}
-                stopPropagation={true}>
-                <MultiLineMapCallout
-                    title='Supply Pickup Location'
-                    description={`${d.pickupLocationName}, ${d.pickupLocationAddress}`}
-                />
-            </MapView.Marker>
-        ));
+        const dropOffLocations = offsetLocations((supplyPickupToggle ? supplyPickupLocations : []), trashDropOffToggle ? trashDropOffLocations : [])
+            .map((d, i) => (
+                <MapView.Marker
+                    key={ `${town}DropOffLocation${i}` }
+                    // image={trashDropOffLocationIcon}
+                    pinColor={ "blue" }
+                    coordinate={ d.coordinates }
+                    stopPropagation={ true }>
+                    <MultiLineMapCallout
+                        title="Drop Off Location"
+                        description={ `${d.name}, ${d.address}` }
+                    />
+                </MapView.Marker>
+            ));
 
-        const cleanAreaMarkers = (this.props.cleanAreasToggle && cleanAreas || []).map((d, i) => (
-            <MapView.Marker
-                key={`cleanArea${i}`}
-                pinColor={'orange'}
-                coordinate={d.coordinates}
-                stopPropagation={true}>
-                <MultiLineMapCallout
-                    title={`${d.title}`}
-                    description={`${d.description}`} />
-            </MapView.Marker>
-        ));
+        const pickupLocations = (supplyPickupToggle ? supplyPickupLocations : [])
+            .map((d, i) => (
+                <MapView.Marker
+                    key={ `supplyPickup${i}` }
+                    // image={supplyPickupLocationIcon}
+                    pinColor={ "green" }
+                    coordinate={ d.coordinates }
+                    stopPropagation={ true }>
+                    <MultiLineMapCallout
+                        title="Supply Pickup Location"
+                        description={ `${d.name}, ${d.address}` }
+                    />
+                </MapView.Marker>
+            ));
 
+        const cleanAreaMarkers = (cleanAreasToggle ? cleanAreas : [])
+            .map((d, i) => (
+                <MapView.Marker
+                    key={ `cleanArea${i}` }
+                    pinColor={ "orange" }
+                    coordinate={ d.coordinates }
+                    stopPropagation={ true }>
+                    <MultiLineMapCallout
+                        title={ `${d.title}` }
+                        description={ `${d.description}` }/>
+                </MapView.Marker>
+            ));
 
-        const allMarkers = pickupLocations.concat(dropoffLocations).concat(unCollectedTrash).concat(myTrash).concat(collectedTrash).concat(cleanAreaMarkers);
+        const allMarkers = pickupLocations
+            .concat(dropOffLocations)
+            .concat(unCollectedTrash)
+            .concat(myTrash)
+            .concat(collectedTrash)
+            .concat(cleanAreaMarkers);
 
         const enableLocation = async () => {
-            if(Platform.OS === 'android') {
+            if (Platform.OS === "android") {
                 await IntentLauncherAndroid.startActivityAsync(
                     IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
                 );
             }
 
-            if(Platform.OS === 'ios') {
-                await Linking.openURL('app-settings:');
+            if (Platform.OS === "ios") {
+                await Linking.openURL("app-settings:");
             }
 
             this._getLocationAsync();
@@ -354,92 +326,104 @@ class TrashMap extends Component {
         return this.state.errorMessage
             ? (<View>
                 <Text>{this.state.errorMessage}</Text>
-                <TouchableHighlight style={styles.link} onPress={enableLocation}>
-                    <Text style={[styles.linkText, {color: '#333333'}]}>{'Enable Location Services'}</Text>
+                <TouchableHighlight style={ styles.link } onPress={ enableLocation }>
+                    <Text style={ [styles.linkText, { color: "#333333" }] }>{"Enable Location Services"}</Text>
                 </TouchableHighlight>
             </View>)
             : initialMapLocation &&
             (
-                <View style={styles.frame}>
+                <View style={ styles.frame }>
                     <MapView
-                        initialRegion={initialMapLocation}
-                        showsUserLocation={true}
-                        showsMyLocationButton={true}
-                        showsCompass={true}
-                        style={{
-                            position: 'absolute',
+                        initialRegion={ initialMapLocation }
+                        showsUserLocation={ true }
+                        showsMyLocationButton={ true }
+                        showsCompass={ true }
+                        style={ {
+                            position: "absolute",
                             top: 50,
                             left: 0,
                             right: 0,
                             bottom: 0,
-                            height: '100%',
-                            width: '100%',
+                            height: "100%",
+                            width: "100%",
                             margin: 0,
                             padding: 0
-                        }}
+                        } }
                     >
                         {allMarkers}
                     </MapView>
 
-                    <View style={{
-                        position: 'absolute',
+                    <View style={ {
+                        position: "absolute",
                         top: 0,
                         left: 0,
                         height: 50,
-                        width: '100%',
+                        width: "100%",
                         flex: 1,
-                        flexDirection: 'row',
+                        flexDirection: "row",
                         padding: 0,
-                        justifyContent:'flex-end'
-                    }}>
+                        justifyContent: "flex-end"
+                    } }>
 
 
-                        {townInfo.roadsideDropoffAllowed
+                        {townInfo.roadsideDropOffAllowed
                             ? (
                                 <TouchableHighlight
-                                    style={[styles.headerButton, {backgroundColor: '#EEE', paddingTop: 13, height: 50, flex: 1}]}
-                                    onPress={goToTrashDrop}>
-                                    <Text style={styles.headerButtonText}>
-                                        {'Drop A Trash Bag Here'}
+                                    style={ [styles.headerButton, {
+                                        backgroundColor: "#EEE",
+                                        paddingTop: 13,
+                                        height: 50,
+                                        flex: 1
+                                    }] }
+                                    onPress={ goToTrashDrop }>
+                                    <Text style={ styles.headerButtonText }>
+                                        {"Drop A Trash Bag Here"}
                                     </Text>
-                                </TouchableHighlight>)
-                            :  <View style={[styles.headerButton, {backgroundColor: '#EEE', paddingTop: 13, height: 50, flex: 1}]}/>}
+                                </TouchableHighlight>
+                            )
+                            : (<View style={ [styles.headerButton, {
+                                backgroundColor: "#EEE",
+                                paddingTop: 13,
+                                height: 50,
+                                flex: 1
+                            }] }/>)
+                        }
                         <TouchableHighlight
-                            style={{height: 50, width: 50, padding: 5, backgroundColor: 'rgba(255,255,255,0.8)'}}
-                            onPress={() => {
+                            style={ { height: 50, width: 50, padding: 5, backgroundColor: "rgba(255,255,255,0.8)" } }
+                            onPress={ () => {
                                 this.setState({
                                     toggleModalVisible: true
                                 });
-                            }}>
+                            } }>
                             <Ionicons
-                                name={Platform.OS === 'ios' ? 'ios-options-outline' : 'md-options'}
-                                size={42}
-                                color='#333'
+                                name={ Platform.OS === "ios" ? "ios-options" : "md-options" }
+                                size={ 42 }
+                                color="#333"
                             />
                         </TouchableHighlight>
                     </View>
 
-                    <TownInformation townInfo={townInfo} town={town}/>
+                    <TownInformation townInfo={ townInfo } town={ town }/>
                     <Modal
-                        animationType={'slide'}
-                        transparent={false}
-                        visible={this.state.modalVisible}
-                        onRequestClose={() => {
+                        animationType={ "slide" }
+                        transparent={ false }
+                        visible={ this.state.modalVisible }
+                        onRequestClose={ () => {
                             this.closeModal();
-                        }}>
-                        <View style={styles.frame}>
-                            <View style={[styles.buttonBarHeader, {backgroundColor: '#EEE', marginTop: 30}]}>
-                                <View style={styles.buttonBar}>
+                        } }>
+                        <View style={ [styles.frame, { paddingTop: 30 }] }>
+                            <View style={ [styles.buttonBarHeader, { backgroundColor: "#EEE", marginTop: 10 }] }>
+                                <View style={ styles.buttonBar }>
                                     {
                                         showFirstButton
                                             ? (
-                                                <View style={styles.buttonBarButton}>
+                                                <View style={ styles.buttonBarButton }>
                                                     <TouchableOpacity
-                                                        style={styles.headerButton}
-                                                        onPress={saveTrashDrop}
+                                                        style={ styles.headerButton }
+                                                        onPress={ saveTrashDrop }
                                                     >
-                                                        <Text style={styles.headerButtonText}>
-                                                            {this.state.drop.uid ? 'Update This Spot' : 'Mark This Spot'}
+                                                        <Text style={ styles.headerButtonText }>
+                                                            {this.state.drop.id ? "Update This Spot" : "Mark This Spot"}
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
@@ -448,62 +432,62 @@ class TrashMap extends Component {
                                     }
 
 
-                                    <View style={styles.buttonBarButton}>
-                                        <TouchableOpacity style={styles.headerButton} onPress={this.closeModal}>
-                                            <Text style={styles.headerButtonText}>{'Cancel'}</Text>
+                                    <View style={ styles.buttonBarButton }>
+                                        <TouchableOpacity style={ styles.headerButton } onPress={ this.closeModal }>
+                                            <Text style={ styles.headerButtonText }>{"Cancel"}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                             </View>
                             <KeyboardAvoidingView
-                                style={defaultStyles.frame}
-                                behavior={Platform.OS === 'ios' ? 'padding' : null}
+                                style={ defaultStyles.frame }
+                                behavior={ Platform.OS === "ios" ? "padding" : null }
                             >
-                                <ScrollView style={styles.scroll}>
-                                    <View style={styles.infoBlockContainer}>
-                                        <Text style={styles.labelDark}>Number of Bags</Text>
+                                <ScrollView style={ styles.scroll }>
+                                    <View style={ styles.infoBlockContainer }>
+                                        <Text style={ styles.labelDark }>Number of Bags</Text>
                                         <TextInput
-                                            underlineColorAndroid='transparent'
-                                            editable={showFirstButton}
-                                            value={this.state.drop.bagCount.toString()}
-                                            keyboardType='numeric'
-                                            placeholder='1'
-                                            style={styles.textInput}
-                                            onChangeText={(text) => this.setState({
+                                            underlineColorAndroid="transparent"
+                                            editable={ showFirstButton }
+                                            value={ this.state.drop.bagCount.toString() }
+                                            keyboardType="numeric"
+                                            placeholder="1"
+                                            style={ styles.textInput }
+                                            onChangeText={ (text) => this.setState({
                                                 drop: {
                                                     ...this.state.drop,
                                                     bagCount: Number(text)
                                                 }
-                                            })}
+                                            }) }
                                         />
-                                        <Text style={styles.labelDark}>Other Items</Text>
-                                        <View style={styles.fieldset}>
+                                        <Text style={ styles.labelDark }>Other Items</Text>
+                                        <View style={ styles.fieldset }>
                                             <CheckBox
-                                                editable={showFirstButton}
-                                                label='Needles/Bio-Waste'
-                                                checked={this.state.drop.tags.indexOf('bio-waste') > -1}
-                                                onChange={this._toggleTag(showFirstButton, 'bio-waste')}/>
+                                                editable={ showFirstButton }
+                                                label="Needles/Bio-Waste"
+                                                checked={ this.state.drop.tags.indexOf("bio-waste") > -1 }
+                                                onChange={ this._toggleTag(showFirstButton, "bio-waste") }/>
                                             <CheckBox
-                                                editable={showFirstButton}
-                                                label='Tires'
-                                                checked={this.state.drop.tags.indexOf('tires') > -1}
-                                                onChange={this._toggleTag(showFirstButton, 'tires')}/>
+                                                editable={ showFirstButton }
+                                                label="Tires"
+                                                checked={ this.state.drop.tags.indexOf("tires") > -1 }
+                                                onChange={ this._toggleTag(showFirstButton, "tires") }/>
                                             <CheckBox
-                                                editable={showFirstButton}
-                                                label='Large Object'
-                                                checked={this.state.drop.tags.indexOf('large') > -1}
-                                                onChange={this._toggleTag(showFirstButton, 'large')}/>
+                                                editable={ showFirstButton }
+                                                label="Large Object"
+                                                checked={ this.state.drop.tags.indexOf("large") > -1 }
+                                                onChange={ this._toggleTag(showFirstButton, "large") }/>
                                         </View>
 
                                     </View>
                                     {
-                                        this.state.drop.uid && !this.state.drop.wasCollected && (
-                                            <View style={{width: '100%', height: 60}}>
+                                        this.state.drop.id && !this.state.drop.wasCollected && (
+                                            <View style={ { width: "100%", height: 60 } }>
                                                 <TouchableHighlight
-                                                    style={[styles.button, {width: '100%'}]}
-                                                    onPress={collectTrashDrop}
+                                                    style={ [styles.button, { width: "100%" }] }
+                                                    onPress={ collectTrashDrop }
                                                 >
-                                                    <Text style={styles.buttonText}>{'Collect Trash'}</Text>
+                                                    <Text style={ styles.buttonText }>{"Collect Trash"}</Text>
                                                 </TouchableHighlight>
                                             </View>
                                         )
@@ -513,13 +497,13 @@ class TrashMap extends Component {
                         </View>
                     </Modal>
                     <Modal
-                        animationType={'slide'}
-                        transparent={false}
-                        visible={this.state.toggleModalVisible}
-                        onRequestClose={() => {
+                        animationType={ "slide" }
+                        transparent={ false }
+                        visible={ this.state.toggleModalVisible }
+                        onRequestClose={ () => {
                             this.closeToggleModal();
-                        }}>
-                        <TrashToggles close={this.closeToggleModal}/>
+                        } }>
+                        <TrashToggles close={ this.closeToggleModal }/>
                     </Modal>
                 </View>
             );
@@ -527,21 +511,21 @@ class TrashMap extends Component {
 }
 
 function mapStateToProps(state) {
-    const drops = Object.keys(state.trashTracker.trashDrops || {})
-        .filter(key => !!(state.trashTracker.trashDrops[key].location && state.trashTracker.trashDrops[key].location.longitude && state.trashTracker.trashDrops[key].location.latitude))
-        .map(key => ({...state.trashTracker.trashDrops[key], uid: key}));
+    const drops = (state.trashTracker.trashDrops || [])
+        .filter(drop => drop.location && drop.location.longitude && drop.location.latitude);
+
     const cleanAreas = Object.values(state.teams.teams)
         .reduce((areas, team) => areas.concat(team.locations.map(l => Object.assign({}, {
-            key: '',
+            key: "",
             coordinates: l.coordinates,
             title: `${team.name}`,
-            description: 'claimed this area'
+            description: "claimed this area"
         }))), []);
-    const townData = state.trashBagFinder.townData;
+    const townData = state.towns.townData;
     const collectedTrashToggle = state.trashTracker.collectedTrashToggle;
     const supplyPickupToggle = state.trashTracker.supplyPickupToggle;
     const uncollectedTrashToggle = state.trashTracker.uncollectedTrashToggle;
-    const trashDropoffToggle = state.trashTracker.trashDropoffToggle;
+    const trashDropOffToggle = state.trashTracker.trashDropOffToggle;
     const myTrashToggle = state.trashTracker.myTrashToggle;
     const cleanAreasToggle = state.trashTracker.cleanAreasToggle;
     return {
@@ -552,7 +536,7 @@ function mapStateToProps(state) {
         collectedTrashToggle,
         supplyPickupToggle,
         uncollectedTrashToggle,
-        trashDropoffToggle,
+        trashDropOffToggle,
         myTrashToggle,
         cleanAreas,
         cleanAreasToggle

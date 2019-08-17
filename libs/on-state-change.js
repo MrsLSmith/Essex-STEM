@@ -1,6 +1,7 @@
+// @flow
 export default function onChangeState(stateKey) {
     return (value) => {
-        let newState = {};
+        const newState = {};
         newState[stateKey] = value;
         this.setState(newState);
     };

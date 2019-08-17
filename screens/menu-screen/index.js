@@ -1,21 +1,14 @@
-/**
- * GreenUpVermont React Native App
- * https://github.com/johnneed/GreenUpVermont
- * @flow
- */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Text, View, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+// @flow
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import * as actions from '../login-screen/actions';
-import { defaultStyles } from '../../styles/default-styles';
-
-import { Platform } from 'react-native';
+import * as actions from "../login-screen/actions";
+import { defaultStyles } from "../../styles/default-styles";
 
 const myStyles = {};
-
 const combinedStyles = Object.assign({}, defaultStyles, myStyles);
 const styles = StyleSheet.create(combinedStyles);
 
@@ -27,83 +20,47 @@ class MenuScreen extends Component {
     };
 
     static navigationOptions = {
-        title: 'Menu'
+        title: "Menu"
     };
-
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (
-            <View style={styles.frame}>
-                <ScrollView style={[styles.scroll, { paddingTop: 20, paddingLeft: 20, paddingRight: 20 }]}>
+            <View style={ styles.frame }>
+                <ScrollView style={ [styles.scroll, { paddingTop: 20, paddingLeft: 20, paddingRight: 20 }] }>
                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                            Linking.openURL('https://www.razoo.com/organization/Vermont-Green-Up');
-                        }}
+                        style={ styles.button }
+                        onPress={ () => this.props.navigation.navigate("Towns") }
                     >
-                        <Text style={styles.buttonText}>Support Green Up Day</Text>
+                        <Text style={ styles.buttonText }>Events, Supplies & Info</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('About')}
+                        style={ styles.button }
+                        onPress={ () => this.props.navigation.navigate("About") }
                     >
-                        <Text style={styles.buttonText}>About Green Up Day</Text>
+                        <Text style={ styles.buttonText }>About Green Up Day</Text>
                     </TouchableOpacity>
-
                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('TrashBagFinder')}
+                        style={ styles.button }
+                        onPress={ () => this.props.navigation.navigate("Profile") }
                     >
-                        <Text style={styles.buttonText}>Town Info</Text>
+                        <Text style={ styles.buttonText }>My Profile</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('Profile')}
+                        style={ styles.button }
+                        onPress={ () => this.props.navigation.navigate("Legal") }
                     >
-                        <Text style={styles.buttonText}>My Profile</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('Privacy')}
-                    >
-                        <Text style={styles.buttonText}>Privacy & Terms</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                            Linking.openURL('https://goo.gl/forms/uKDWmHkMbQLgPE5n2');
-                        }}
-                    >
-                        <Text style={styles.buttonText}>Feedback Form</Text>
+                        <Text style={ styles.buttonText }>Privacy & Terms</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                          if(Platform.OS == 'ios'){
-                            Linking.openURL(APP_STORE_LINK);
-                          }
-                          else{
-                            Linking.openURL(PLAY_STORE_LINK);
-                          }
-                        }}
+                        style={ styles.button }
+                        onPress={ this.props.actions.logout }
                     >
-                        <Text style={styles.buttonText}>Rate this App</Text>
+                        <Text style={ styles.buttonText }>Log Out</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={this.props.actions.logout}
-                    >
-                        <Text style={styles.buttonText}>Log Out</Text>
-                    </TouchableOpacity>
-                    <View style={{height: 20}}></View>
+                    <View style={ { height: 20 } }/>
                 </ScrollView>
-            </View >
+            </View>
         );
     }
 }
@@ -115,7 +72,7 @@ const mapDispatchToProps = (dispatch) => ({
     actions: bindActionCreators(actions, dispatch)
 });
 
-const APP_STORE_LINK = 'itms://itunes.apple.com/us/app/green-up-vermont/id1364770239?mt=8';
-const PLAY_STORE_LINK = 'market://details?id=org.greenupvermont.app';
+const APP_STORE_LINK = "itms://itunes.apple.com/us/app/green-up-vermont/id1364770239?mt=8";
+const PLAY_STORE_LINK = "market://details?id=org.greenupvermont.app";
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuScreen);
