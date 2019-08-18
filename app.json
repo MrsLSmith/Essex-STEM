@@ -4,7 +4,7 @@
     "description": "The Official App for Vermont's Green Up Day",
     "slug": "Green-Up-Vermont",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "34.0.0",
     "platforms": [
       "ios",
       "android"
