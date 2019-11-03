@@ -1,0 +1,21 @@
+// @flow
+declare type TownLocation = {
+    address: ?string;
+    name: ?string;
+    notes: ?string;
+    coordinates: ?CoordinatesType;
+}
+
+declare class Town {
+    id: ?string;
+    name: ?string;
+    description: ?string;
+    notes: ?string;
+    dropOffInstructions: ?string;
+    dropOffLocations: ?Array<TownLocation>;
+    pickupInstructions: ?string;
+    pickupLocations: ?Array<TownLocation>;
+    roadsideDropOffAllowed: ?boolean;
+    created: ?Date;
+    updated: ?Date;
+}

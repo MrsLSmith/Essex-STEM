@@ -1,103 +1,75 @@
-/**
- * GreenUpVermont React Native App
- * https://github.com/johnneed/GreenUpVermont
- * @flow
- */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Text, View, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
-import * as actions from '../login-screen/actions';
-import { defaultStyles } from '../../styles/default-styles';
+// @flow
+import React from "react";
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { logout } from "../../action-creators/session-action-creators";
+import { defaultStyles } from "../../styles/default-styles";
 
 const myStyles = {};
-
 const combinedStyles = Object.assign({}, defaultStyles, myStyles);
 const styles = StyleSheet.create(combinedStyles);
 
-class MenuScreen extends Component {
-    static propTypes = {
-        actions: PropTypes.object,
-        messages: PropTypes.array,
-        navigation: PropTypes.object
-    };
+type PropsType = {
+    actions: Object,
+    navigation: Object
+};
 
-    static navigationOptions = {
-        title: 'Menu'
-    };
+const MenuScreen = ({ actions, navigation }: PropsType): React$Element<View> => (
+    <View style={ styles.frame }>
+        <ScrollView style={ [styles.scroll, { paddingTop: 20, paddingLeft: 20, paddingRight: 20 }] }>
+            <TouchableOpacity
+                style={ styles.button }
+                onPress={ () => {
+                    navigation.navigate("Towns");
+                } }
+            >
+                <Text style={ styles.buttonText }>{ "Town Info" }</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.button }
+                onPress={ () => {
+                    navigation.navigate("About");
+                } }
+            >
+                <Text style={ styles.buttonText }>{ "About Green Up Day" }</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.button }
+                onPress={ () => {
+                    navigation.navigate("Profile");
+                } }
+            >
+                <Text style={ styles.buttonText }>{ "My Profile" }</Text>
+            </TouchableOpacity>
 
-    constructor(props) {
-        super(props);
-    }
+            <TouchableOpacity
+                style={ styles.button }
+                onPress={ () => {
+                    navigation.navigate("Legal");
+                } }
+            >
+                <Text style={ styles.buttonText }>{ "Legal" }</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.button }
+                onPress={ actions.logout }
+            >
+                <Text style={ styles.buttonText }>{ "Log Out" }</Text>
+            </TouchableOpacity>
+            <View style={ { height: 20 } }/>
+        </ScrollView>
+    </View>
+);
 
-    render() {
-        return (
-            <View style={styles.frame}>
-                <ScrollView style={[styles.scroll, { paddingTop: 20, paddingLeft: 20, paddingRight: 20 }]}>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                            Linking.openURL('https://www.razoo.com/organization/Vermont-Green-Up');
-                        }}
-                    >
-                        <Text style={styles.buttonText}>Support Green Up Day</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('About')}
-                    >
-                        <Text style={styles.buttonText}>About Green Up Day</Text>
-                    </TouchableOpacity>
+MenuScreen.navigationOptions = {
+    title: "Menu"
+};
+const mapStateToProps = (): Object => ({});
 
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('TrashBagFinder')}
-                    >
-                        <Text style={styles.buttonText}>Town Info</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('Profile')}
-                    >
-                        <Text style={styles.buttonText}>My Profile</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('Privacy')}
-                    >
-                        <Text style={styles.buttonText}>Privacy & Terms</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                            Linking.openURL('https://goo.gl/forms/uKDWmHkMbQLgPE5n2');
-                        }}
-                    >
-                        <Text style={styles.buttonText}>Feedback Form</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={this.props.actions.logout}
-                    >
-                        <Text style={styles.buttonText}>Log Out</Text>
-                    </TouchableOpacity>
-                    <View style={{height: 20}}></View>
-                </ScrollView>
-            </View >
-        );
-    }
-}
-
-
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = (dispatch) => ({
-    actions: bindActionCreators(actions, dispatch)
+const mapDispatchToProps = (dispatch: Dispatch<Object>): Object => ({
+    actions: bindActionCreators({ logout }, dispatch)
 });
 
+// $FlowFixMe
 export default connect(mapStateToProps, mapDispatchToProps)(MenuScreen);

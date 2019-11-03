@@ -1,15 +1,11 @@
-/**
- * GreenUpVermont React Native App
- * https://github.com/johnneed/GreenUpVermont
- * @flow
- */
-import Login from './login';
-import CreateNewAccount from './create-new-account';
-import ForgotPassword from './forgot-password';
+// @flow
 
-import {StackNavigator} from 'react-navigation';
+import Login from "./login";
+import CreateNewAccount from "./create-new-account";
+import ForgotPassword from "./forgot-password";
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
-export default StackNavigator({
+const AppNavigator = createStackNavigator({
     Login: {
         screen: Login
     },
@@ -20,4 +16,7 @@ export default StackNavigator({
         screen: ForgotPassword
     }
 });
+
+// $FlowFixMe
+export default createAppContainer(AppNavigator);
 
