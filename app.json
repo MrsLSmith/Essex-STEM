@@ -9,6 +9,7 @@
       "ios",
       "android"
     ],
+    "owner": "c4btv",
     "githubUrl": "https://github.com/codeforbtv/green-up-app",
     "version": "2.0.4",
     "orientation": "portrait",
