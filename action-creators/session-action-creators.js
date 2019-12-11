@@ -41,64 +41,7 @@ export function loginWithEmailPassword(email: string, password: string): ThunkTy
     return thunk;
 }
 
-// // TODO Refactor this into a true Thunk
-// export function googleLogin(): (Dispatch<Object> => Promise<any>) {
-//     return async function logIn(dispatch: Dispatch<ActionType>) {
-//         try {
-//             // Expo SDK 32 has a bug. Swap clientId logic if you are in dev or pushing a standalone app to TestFlight or App store
-//             const result = await Google.logInAsync({
-//                 clientId: Platform.OS === "android" ? thirdPartyConfig.androidClientId : thirdPartyConfig.iosClientId, // use this line when pushing to app store.
-//                 // clientId: thirdPartyConfig.androidClientId,  // use this line when in development (using Expo App)
-//                 scopes: ["profile", "email"],
-//                 useBrowser: true,
-//                 behavior: "web"
-//             });
-//
-//             if (result.type === "success") {
-//                 firebaseDataLayer.googleAuth(result.idToken, dispatch).catch((error: Error) => {
-//                     dispatch({
-//                         type: actionTypes.LOGIN_FAIL,
-//                         error
-//                     });
-//                 });
-//             } else {
-//                 dispatch({
-//                     type: actionTypes.LOGIN_FAIL,
-//                     error: "Google authentication failed"
-//                 });
-//             }
-//         } catch (error) {
-//             dispatch({ type: actionTypes.LOGIN_FAIL, error });
-//         }
-//     };
-// }
-
-// TODO: Refactor into a true Thunk
-// export function facebookLogin(): (Dispatch<Object> => Promise<any>) {
-//     return async function logIn(dispatch: Object => *) {
-//         const facebook = await Facebook.logInWithReadPermissionsAsync(thirdPartyConfig.facebookAppId, {
-//             behavior: "web", permissions: ["public_profile", "email"]
-//         });
-//         const { type, token } = facebook;
-//         if (type === "success") {
-//             firebaseDataLayer.facebookAuth(token, dispatch).catch((error: Error) => {
-//                 dispatch({
-//                     type: actionTypes.LOGIN_FAIL,
-//                     error
-//                 });
-//             });
-//         } else {
-//             dispatch({
-//                 type: actionTypes.LOGIN_FAIL,
-//                 session: {
-//                     facebook: null,
-//                     user: null
-//                 }
-//             });
-//         }
-//     };
-// }
-
+ 
 export function resetPassword(emailAddress: string): ThunkType {
     function thunk(dispatch: Dispatch<ActionType>) {
         firebaseDataLayer.resetPassword(emailAddress)
@@ -119,9 +62,6 @@ export function resetPassword(emailAddress: string): ThunkType {
     return thunk;
 }
 
-// export function isLoggingInViaSSO(_isLoggingInViaSSO: boolean): Object {
-//     return { type: actionTypes.IS_LOGGING_IN_VIA_SSO, isLoggingInViaSSO: _isLoggingInViaSSO };
-// }
 
 export const initialize = (): ThunkType => {
     function thunk(dispatch: Dispatch<ActionType>) {

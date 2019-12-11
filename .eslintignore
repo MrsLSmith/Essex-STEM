@@ -4,3 +4,7 @@
 environment.example.js
 write-firebase-config.js
 babel.config.js
+.env
+.env.dev
+.env.qa
+.env.prod

@@ -1,4 +1,8 @@
 .env
+firebase-config.js
+firebase-config.prod.js
+firebase-config.qa.js
+firebase-config.dev.js
 environment.js
 node_modules/**/*
 *.expo
