@@ -1,7 +1,13 @@
+/* eslint-disable no-unused-vars */
+const darkGreen = "#55683A";
+const brightOrange = "#FA774E";
+const darkOrange = "#FF55";
+const orange = "#FFA500";
 export const colorButton = "#FA774E";
-export const colorBackgroundHome = "#55683A";
-export const colorTextThemeDark = "#55683A";
-export const colorTextThemeLight = "#FFFFFF";
+export const colorBackgroundLight = "#AAA";
+export const colorHeaderText = "#FFF";
+export const colorTextThemeDark = "#AAA";
+export const colorTextThemeLight = "#EEE";
 export const colorTextThemeAlt = "#FA774E";
 export const colorBackgroundHeader = "#EFEFEF";
 export const colorBorderHeader = "#333";

@@ -177,12 +177,17 @@ const HomeScreen = ({ actions, currentUser, navigation, myTeams, teams }: PropsT
                             <Text style={ {
                                 color: "white",
                                 fontSize: 30,
-                                fontFamily: "sriracha"
-
+                                fontFamily: "Rubik-Regular",
+                                fontWeight: "bold"
                             } }
-                            styleName="md-gutter-bottom">{ rowData[0].label }</Text>
-                            <Text style={ { color: "white", fontSize: 20, fontFamily: "sriracha" } }
-                                styleName="sm-gutter-horizontal">{ rowData[0].description }</Text>
+                                  styleName="md-gutter-bottom">{ rowData[0].label.toUpperCase() }</Text>
+                            <Text style={ {
+                                color: "white",
+                                fontSize: 20,
+                                fontFamily: "Rubik-Regular",
+                                fontWeight: "bold"
+                            } }
+                                  styleName="sm-gutter-horizontal">{ rowData[0].description }</Text>
 
                         </Tile>
                     </ImageBackground>
@@ -195,18 +200,33 @@ const HomeScreen = ({ actions, currentUser, navigation, myTeams, teams }: PropsT
             <TouchableOpacity
                 key={ id }
                 onPress={ item.onPress }
-                styleName="flexible">
-                <Card styleName="flexible">
+                styleName="flexible"
+            >
+                <Card styleName="flexible"
+                      style={ { borderColor: "#CCC", borderBottomWidth: 1 } }
+                >
                     <Image
                         styleName="medium-wide"
                         source={ item.backgroundImage }
                     />
-                    <View style={ { padding: 5 } } styleName="content">
-                        <Subtitle style={ { fontFamily: "sriracha", fontSize: 20 } }
-                            numberOfLines={ 1 }>{ item.label }</Subtitle>
+                    <View style={ {
+                        padding: 5,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%"
+                    } } styleName="content">
+                        <Subtitle
+                            style={ {
+                                fontFamily: "Rubik-Regular",
+                                textAlign: "center",
+                                fontSize: 17
+                            } }
+                            numberOfLines={ 1 }>
+                            { item.label.toUpperCase() }
+                        </Subtitle>
                         <View styleName="horizontal">
-                            <Text style={ { fontFamily: "sriracha" } }
-                                styleName="collapsible">{ item.description }</Text>
+                            <Text style={ { fontFamily: "Rubik-Regular", textAlign: "center" } }
+                                  styleName="collapsible">{ item.description }</Text>
                         </View>
                     </View>
                 </Card>
@@ -214,7 +234,7 @@ const HomeScreen = ({ actions, currentUser, navigation, myTeams, teams }: PropsT
         ));
 
         return (
-            <GridRow style={ { backgroundColor: "#BBB" } } columns={ 2 }>
+            <GridRow style={ { backgroundColor: "#d5dbd5" } } columns={ 2 }>
                 { cellViews }
             </GridRow>
         );
@@ -222,13 +242,12 @@ const HomeScreen = ({ actions, currentUser, navigation, myTeams, teams }: PropsT
 
 
     return (
-        <SafeAreaView style={ { backgroundColor: colors.colorBackgroundHome } }>
+        <SafeAreaView style={ { backgroundColor: colors.colorBackgroundDark } }>
             <ListView
-                style={ { backgroundColor: constants.colorBackgroundDark, marginBottom: 10 } }
                 data={ groupedData }
                 renderRow={ renderRow }
+                renderFooter={ () => (<View style={ { width: "100%", height: 10, backgroundColor: "#d5dbd5" } }/>) }
             />
-
         </SafeAreaView>
     );
 };
@@ -236,14 +255,20 @@ const HomeScreen = ({ actions, currentUser, navigation, myTeams, teams }: PropsT
 HomeScreen.navigationOptions = {
     title: homeTitle,
     headerStyle: {
-        backgroundColor: "#FFF"
+        backgroundColor: constants.colorBackgroundDark
     },
     headerTintColor: "#fff",
     headerTitleStyle: {
-        fontFamily: "sriracha",
+        fontFamily: "Rubik-Regular",
         fontWeight: "bold",
         fontSize: 20,
-        color: "#55683A"
+        color: constants.colorHeaderText
+    },
+    headerBackTitleStyle: {
+        fontFamily: "Rubik-Regular",
+        fontWeight: "bold",
+        fontSize: 20,
+        color: constants.colorHeaderText
     }
 };
 

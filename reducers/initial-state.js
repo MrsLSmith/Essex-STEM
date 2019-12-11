@@ -2,7 +2,7 @@
 import { getCurrentGreenUpDay } from "../libs/green-up-day-calucators";
 import moment from "moment";
 
-export default {
+const initialState =  {
     about: {
         date: moment(getCurrentGreenUpDay()).utc().format("dddd, MMMM Do YYYY"),
         marketingPermissions: {
@@ -40,14 +40,29 @@ export default {
     networkStatus: { isOnline: null },
     profile: {},
     selectedTeam: null,
-    session: {},
+    session: {
+        initialAuthChecked: false,
+        userIsLoggedIn: false,
+        isInitialized: false,
+        updates: {
+            data: {
+                celebrations: null,
+                eventInfo: null,
+                supplyDistributionSites: null,
+                teams: null,
+                towns: null,
+                trashCollectionSites: null,
+                trashDrops: null
+            }, error: null
+        }
+    },
     supplyDistributionSites: { sites: {}, error: null },
     teamMembers: {},
     teamMembersLoaded: false,
     teamRequests: {},
     teams: { teams: {}, teamMembers: {}, contact: [], selectedTeam: null, locations: [] },
     teamSearchResults: [],
-    towns: { townData: {} },
+    towns: { townData: {}, error: null },
     trashCollectionSites: { sites: {}, error: null },
     trashTracker: {
         trashDrops: [],
@@ -61,3 +76,6 @@ export default {
     },
     userLocation: { coordinates: { latitude: null, longitude: null }, townId: null }
 };
+
+
+export default initialState;

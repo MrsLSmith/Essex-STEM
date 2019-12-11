@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { defaultStyles } from "../../styles/default-styles";
 import * as R from "ramda";
 import { Tile, Divider, ListView, Text } from "@shoutem/ui";
+import * as constants from "../../styles/constants";
 
 const styles = StyleSheet.create(defaultStyles);
 
@@ -92,13 +93,29 @@ const LeaderboardScreen = ({ rankings }: PropsType): React$Element<any> => {
 
 
 LeaderboardScreen.navigationOptions = {
-    title: "Live Leaderboard"
+    title: "Live Leaderboard",
+    headerStyle: {
+        backgroundColor: constants.colorBackgroundDark
+    },
+    headerTintColor: "#fff",
+    headerTitleStyle: {
+        fontFamily: "Rubik-Regular",
+        fontWeight: "bold",
+        fontSize: 20,
+        color: constants.colorHeaderText
+    },
+    headerBackTitleStyle: {
+        fontFamily: "Rubik-Regular",
+        fontWeight: "bold",
+        fontSize: 20,
+        color: constants.colorHeaderText
+    }
 };
 
 const mapStateToProps = (state: Object): Object => {
 
     const teams = state.teams.teams;
-    const bagDrops = state.trashTracker.trashDrops;
+    const bagDrops = Object.values(state.trashTracker.trashDrops);
     const rankings = R.compose(
         R.addIndex(R.map)((ranking, index) => ({
             ...ranking,
