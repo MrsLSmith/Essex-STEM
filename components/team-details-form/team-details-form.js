@@ -1,4 +1,4 @@
-// @flow
+//  @flow
 import React, { useReducer } from "react";
 import {
     Alert,
@@ -13,22 +13,13 @@ import {
 import { View, Button, TextInput, Text, Divider } from "@shoutem/ui";
 import { fixAndroidTime } from "../../libs/fix-android-time";
 import MiniMap from "../../components/mini-map";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import * as actionCreators from "../../action-creators/team-action-creators";
 import moment from "moment";
 import { defaultStyles } from "../../styles/default-styles";
 import Team from "../../models/team";
-import TeamMember from "../../models/team-member";
-import * as statuses from "../../constants/team-member-statuses";
 import User from "../../models/user";
-import { removeNulls } from "../../libs/remove-nulls";
-import { TownLocation } from "../../models/town";
 import ButtonBar from "../../components/button-bar";
 import { getCurrentGreenUpDay } from "../../libs/green-up-day-calucators";
-import * as constants from "../../styles/constants";
-import * as R from "ramda";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { findTownIdByCoordinates } from "../../libs/geo-helpers";
 
@@ -41,8 +32,8 @@ const myStyles = {
 const combinedStyles = Object.assign({}, defaultStyles, myStyles);
 const styles = StyleSheet.create(combinedStyles);
 const dateRangeMessage = `${ moment(getCurrentGreenUpDay()).utc().format("dddd, MMM Do YYYY") } is the next Green Up Day, but teams may choose to work up to one week before or after.`;
-const freshState = (owner: UserType, initialMapLocation: ?CoordinatesType = null): Object => ({
-    team: Team.create({ owner }),
+const freshState = (owner: UserType, team: ?TeamType, initialMapLocation: ?CoordinatesType = null): Object => ({
+    team: Team.create(team || { owner }),
     startDateTimePickerVisible: false,
     endDateTimePickerVisible: false,
     datePickerVisible: false,
@@ -76,16 +67,16 @@ function reducer(state: Object, action: Object): Object {
 }
 
 type PropsType = {
-    actions: { createTeam: (TeamType, UserType) => void },
     currentUser: User,
-    locations: Array<TownLocation>,
     otherCleanAreas: Array<any>,
-    vermontTowns: Array<Object>
+    team: TeamType,
+    onSave: TeamType => void,
+    children: any
 };
 
-const NewTeam = ({ actions, currentUser, otherCleanAreas }: PropsType): React$Element<any> => {
+export const TeamDetailsForm = ({ currentUser, children, otherCleanAreas, team, onSave }: PropsType): React$Element<any> => {
 
-    const [state, dispatch] = useReducer(reducer, freshState(currentUser));
+    const [state, dispatch] = useReducer(reducer, freshState(currentUser, team));
 
     const handleMapClick = (coordinates: Object) => {
         Keyboard.dismiss();
@@ -117,16 +108,16 @@ const NewTeam = ({ actions, currentUser, otherCleanAreas }: PropsType): React$El
     };
 
     const cancel = () => {
-        dispatch({ type: "RESET_STATE", data: freshState(currentUser) });
+        dispatch({ type: "RESET_STATE", data: freshState(currentUser, team) });
     };
 
     const createTeam = () => {
-        const team = Team.create({ ...state.team });
-        if (!team.name) {
+        const myTeam = Team.create({ ...state.team });
+        if (!myTeam.name) {
             Alert.alert("Please give your team a name.");
         } else {
-            actions.createTeam(team, currentUser);
-            const newState = freshState(currentUser);
+            onSave(myTeam);
+            const newState = freshState(currentUser, team ? myTeam : Team.create());
             dispatch({ type: "RESET_STATE", data: newState });
         }
     };
@@ -354,81 +345,10 @@ const NewTeam = ({ actions, currentUser, otherCleanAreas }: PropsType): React$El
                         underlineColorAndroid={ "transparent" }
                     />
                 </View>
+                { children }
                 <View style={ { height: 120 } }/>
             </ScrollView>
         </SafeAreaView>
     );
 };
 
-NewTeam.navigationOptions = {
-    title: "Start a Team",
-    headerStyle: {
-        backgroundColor: constants.colorBackgroundDark
-    },
-    headerTintColor: "#fff",
-    headerTitleStyle: {
-        fontFamily: "Rubik-Regular",
-        fontWeight: "bold",
-        fontSize: 20,
-        color: constants.colorHeaderText
-    },
-    headerBackTitleStyle: {
-        fontFamily: "Rubik-Regular",
-        fontWeight: "bold",
-        fontSize: 20,
-        color: constants.colorHeaderText
-    }
-};
-
-type PinType<T> = ?(Array<T> | T);
-
-const mapStateToProps = (state: Object): Object => {
-    const profile = state.profile;
-
-    const currentUser = User.create({ ...state.login.user, ...removeNulls(state.profile) });
-
-    const owner = TeamMember.create({ ...currentUser, ...profile, memberStatus: statuses.OWNER });
-
-    const mapToPinData = R.cond([
-        [
-            (locations: any): boolean => !locations,
-            (): Array<any> => []
-        ],
-        [
-            Array.isArray,
-            (locations: PinType<any>, teamName: any): Array<Object> => (locations || [])
-                .filter((l: PinType<any>): boolean => Boolean(l))
-                .map((l: Object): mixed => mapToPinData(l, teamName))
-        ],
-        [
-            R.T,
-            (location: any, teamName: any): Object => ({
-                key: "",
-                coordinates: location.coordinates,
-                title: `${ teamName || "Another Team" }`,
-                description: "has claimed this area"
-            })]
-    ]);
-
-    // $FlowFixMe
-    const otherCleanAreas = R.compose(
-        R.flatten,
-        R.map((team: TeamType): Array<Object> => mapToPinData(team.locations, team.name)),
-        Object.values
-    )(state.teams.teams);
-
-    // // $FlowFixMe
-    // const vermontTowns = R.compose(
-    //     R.sort((a: TeamType, b: TeamType): number => ((a.name || "").toLowerCase() < (b.name || "").toLowerCase()) ? 1 : -1),
-    //     R.filter((town: Town): boolean => Boolean(town.name)), // hedge against bad data.
-    //     Object.values
-    // )(state.towns.townData);
-
-    return { owner, currentUser, otherCleanAreas };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<Object>): Object =>
-    ({ actions: bindActionCreators(actionCreators, dispatch) });
-
-// $FlowFixMe
-export default connect(mapStateToProps, mapDispatchToProps)(NewTeam);
